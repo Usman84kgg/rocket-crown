@@ -7,7 +7,19 @@
 
 <body>
 
-<div class="app">
+<div id="loading-screen">
+
+    <h1>SUMMIT CROWN</h1>
+
+    <p>INITIALIZING...</p>
+    <p>SECURITY CHECK...</p>
+    <p>CONNECTING TO TELEGRAM...</p>
+    <p>AUTHORIZING USER...</p>
+    <p>ACCESS GRANTED.</p>
+
+</div>
+
+<div class="app" id="main-app">
 
     <h1>SUMMIT CROWN</h1>
 
@@ -25,11 +37,8 @@
     <div class="buttons">
 
         <button>Deals</button>
-
         <button>Reviews</button>
-
         <button>Rules</button>
-
         <button>Support</button>
 
     </div>
