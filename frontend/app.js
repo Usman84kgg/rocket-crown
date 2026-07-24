@@ -1,1 +1,7 @@
-console.log("SUMMIT CROWN LOADED");
+setTimeout(() => {
+
+    document.getElementById("loading-screen").style.display = "none";
+
+    document.getElementById("main-app").style.display = "block";
+
+}, 3000);
