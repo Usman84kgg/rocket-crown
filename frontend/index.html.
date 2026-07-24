@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Summit Crown</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <h1>SUMMIT CROWN</h1>
+
+    <p class="welcome">
+        Welcome back
+    </p>
+
+    <div class="card">
+        <h2>Crown Member</h2>
+        <p>Deals: 0</p>
+        <p>Rating: 0 ⭐</p>
+        <p>Crown Points: 0</p>
+    </div>
+
+    <div class="buttons">
+
+        <button>Deals</button>
+
+        <button>Reviews</button>
+
+        <button>Rules</button>
+
+        <button>Support</button>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
