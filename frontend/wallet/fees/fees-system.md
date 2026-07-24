@@ -1,0 +1,1 @@
+Wallet fees configuration.
