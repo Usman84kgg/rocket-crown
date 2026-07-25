@@ -376,5 +376,19 @@ border:1px solid rgba(255,215,0,0.3);
 
 }
 
+.cashback-card{
+
+background:#141414;
+
+padding:20px;
+
+border-radius:25px;
+
+margin-bottom:25px;
+
+border:1px solid rgba(255,215,0,0.3);
+
+}
+
 }
 
