@@ -19,3 +19,10 @@ document.querySelector(".balance-card h1").innerHTML =
 balance.toFixed(2) + " TON";
 
 }, 3000);
+
+
+function showPage(page){
+
+console.log("Открываем страницу:", page);
+
+}
