@@ -1,78 +1,123 @@
+// =====================
+// ROCKET CROWN
+// =====================
+
+
 // ЗАГРУЗОЧНЫЙ ЭКРАН
 
-setTimeout(function(){
+setTimeout(() => {
 
-document.getElementById("loading-screen").style.display="none";
+document.getElementById("loading-screen").style.display = "none";
+document.getElementById("main-app").style.display = "block";
 
-document.getElementById("main-app").style.display="block";
-
-},2500);
+}, 2500);
 
 
-// АНИМАЦИЯ БАЛАНСА
+// =====================
+// USER DATA
+// =====================
 
-let balance = 0;
+let userBalance = 0.00;
 
-setInterval(() => {
+let userLevel = 1;
 
-balance += 0.01;
+let userProfit = 0.00;
+
+let cashbackEarned = 0.00;
+
+
+// =====================
+// ОБНОВЛЕНИЕ БАЛАНСА
+// =====================
+
+function updateBalance() {
 
 const balanceElement = document.querySelector(".top-balance");
 
-if(balanceElement){
+if (balanceElement) {
 
-balanceElement.innerHTML = balance.toFixed(2) + " TON";
+balanceElement.innerHTML = `$ ${userBalance.toFixed(2)}`;
 
 }
-
-},3000);
-
-
-// ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
-
-function showPage(page){
-
-
-document.getElementById("home-page").style.display="none";
-
-document.getElementById("casino-page").style.display="none";
-
-document.getElementById("wallet-page").style.display="none";
-
-document.getElementById("profile-page").style.display="none";
-
-
-if(page==="home"){
-
-document.getElementById("home-page").style.display="block";
 
 }
 
 
-if(page==="casino"){
+// =====================
+// ОБНОВЛЕНИЕ VIP LEVEL
+// =====================
 
-document.getElementById("casino-page").style.display="block";
+function updateLevel() {
+
+const levelElement = document.querySelector(".top-level");
+
+if (levelElement) {
+
+levelElement.innerHTML = `LVL ${userLevel}`;
+
+}
 
 }
 
 
-if(page==="wallet"){
+// =====================
+// ОТКРЫТИЕ СТРАНИЦ
+// =====================
 
-document.getElementById("wallet-page").style.display="block";
+function openHome() {
 
-}
-
-
-if(page==="profile"){
-
-document.getElementById("profile-page").style.display="block";
+window.location.href = "./index.html";
 
 }
 
 
+function openCasino() {
+
+window.location.href = "./games/index.html";
+
 }
 
 
-// ГЛАВНАЯ СТРАНИЦА ОТКРЫТА ПО УМОЛЧАНИЮ
+function openWallet() {
 
-showPage("home");
+window.location.href = "./wallet/index.html";
+
+}
+
+
+function openProfile() {
+
+window.location.href = "./profile/index.html";
+
+}
+
+
+// =====================
+// ЗАПУСК
+// =====================
+
+updateBalance();
+updateLevel();
+
+
+// =====================
+// В БУДУЩЕМ
+// =====================
+
+// Автоматическое получение курса криптовалют.
+
+// Депозиты.
+
+// Вывод средств.
+
+// VIP система.
+
+// Crown Points.
+
+// Турниры.
+
+// Cashback.
+
+// Referral Program.
+
+// Telegram Mini App.
