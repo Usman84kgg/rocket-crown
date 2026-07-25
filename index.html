@@ -2,14 +2,10 @@
 <html lang="ru">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Rocket Crown</title>
-
 <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -18,9 +14,7 @@
 
 <div id="loading-screen">
 
-<div class="loading-logo">
-👑
-</div>
+<div class="loading-logo">👑</div>
 
 <div class="loading-title">
 ROCKET CROWN
@@ -37,85 +31,87 @@ Premium Crypto Casino
 
 <div class="container" id="main-app">
 
-<div class="crown">
-👑
+<!-- Верхняя панель -->
+
+<div class="top-bar">
+
+<div class="top-logo">
+👑 Rocket Crown
 </div>
 
-<div class="logo">
-ROCKET CROWN
+<div class="top-balance">
+0.00 TON
 </div>
 
-<div class="subtitle">
-Premium Crypto Casino
+<div class="top-profile">
+👤
 </div>
-
-<p>
-Level 1 Crown Member
-</p>
-
-
-<div class="notification">
-
-🔔 No notifications
 
 </div>
 
 
-<div class="welcome-card">
-
-<h2>WELCOME BACK</h2>
-
-<p>
-Good luck and enjoy your games!
-</p>
-
-</div>
-
-
-<!-- Баланс -->
-
-<div class="balance-card">
-
-<p>Balance</p>
-
-<h1>0.00 TON</h1>
-
-</div>
-
-
-<!-- Crown Points -->
-
-<div class="crown-points">
-
-<h2>CROWN POINTS</h2>
-
-<h1>0 CP</h1>
-
-</div>
-
-
-<!-- Статистика -->
-
-<div class="stats-card">
-
-<h2>YOUR STATS</h2>
-
-<p>Total Wins: 0 TON</p>
-
-<p>Total Games: 0</p>
-
-<p>Current Level: 1</p>
-
-</div>
-
-
-<!-- Кнопки кошелька -->
+<!-- Кошелек -->
 
 <div class="wallet-buttons">
 
 <button>Deposit</button>
 
 <button>Withdraw</button>
+
+</div>
+
+
+<!-- Бонусы -->
+
+<div class="bonus-slider">
+
+<div class="bonus-card">
+🎁 Daily Bonus
+</div>
+
+<div class="bonus-card">
+💸 Cashback
+</div>
+
+<div class="bonus-card">
+🎟 Promo Code
+</div>
+
+</div>
+
+
+<!-- Джекпот -->
+
+<div class="jackpot">
+
+<h2>JACKPOT OF THE DAY</h2>
+
+<h1>173 TON</h1>
+
+<p>Play • Win • Earn TON</p>
+
+</div>
+
+
+<!-- Поиск -->
+
+<div class="search-games">
+
+<input type="text" placeholder="Search games...">
+
+</div>
+
+
+<!-- Категории -->
+
+<div class="games-categories">
+
+<div>All</div>
+<div>Popular</div>
+<div>New</div>
+<div>Table</div>
+<div>PvP</div>
+<div>Slots</div>
 
 </div>
 
@@ -127,124 +123,61 @@ Good luck and enjoy your games!
 <div class="games-grid">
 
 <div class="game-card">
-💣
-<br>
-MINES
+💣<br>MINES
 </div>
 
 <div class="game-card">
-🚀
-<br>
-CRASH
+🚀<br>CRASH
 </div>
 
 <div class="game-card">
-🎲
-<br>
-DICE
+🎲<br>DICE
 </div>
 
 <div class="game-card">
-🎡
-<br>
-ROULETTE
+🎡<br>ROULETTE
 </div>
 
 <div class="game-card">
-🪙
-<br>
-COINFLIP
+🪙<br>COINFLIP
+</div>
+
+<div class="game-card">
+🎯<br>PLINKO
 </div>
 
 </div>
 
 
-<!-- Джекпот -->
-
-<div class="jackpot">
-
-<h2>
-🔥 JACKPOT OF THE DAY
-</h2>
-
-<h1>
-173 TON
-</h1>
-
-</div>
-
-
-<!-- Победы -->
+<!-- Live Wins -->
 
 <div class="live-wins">
 
-<h2>
-LIVE WINS
-</h2>
+<h2>LIVE WINS</h2>
 
 <p>
-@Player**** won 3.47 TON
+@Player**** +3.47 TON •
+@Alex**** +8 TON •
+@King**** +17 TON
 </p>
 
 </div>
 
 
-<!-- Бонус -->
+<!-- Статистика -->
 
-<div class="bonus">
-
-🎁 DAILY BONUS
-
-</div>
-
-
-<!-- VIP -->
-
-<div class="vip-card">
-
-<h2>VIP CLUB</h2>
+<div class="stats-card">
 
 <p>
-Unlock exclusive rewards and cashback.
+Games: 0
 </p>
 
-</div>
-
-
-<!-- Поддержка -->
-
-<div class="support-card">
-
-<h2>24/7 SUPPORT</h2>
-
 <p>
-Support is always online.
+Profit: 0 TON
 </p>
 
-</div>
-
-
-<!-- Кэшбэк -->
-
-<div class="cashback-card">
-
-<h2>CROWN CASHBACK</h2>
-
 <p>
-0%
-</p>
-
-</div>
-
-
-<!-- Статистика дня -->
-
-<div class="daily-card">
-
-<h2>DAILY STATS</h2>
-
-<p>
-Today's Profit: 0 TON
+VIP Level: 1
 </p>
 
 </div>
@@ -254,15 +187,21 @@ Today's Profit: 0 TON
 
 <div class="bottom-menu">
 
-<div>🏠<br>Home</div>
+<div>
+🏠<br>Home
+</div>
 
-<div>🎰<br>Casino</div>
+<div>
+🎰<br>Casino
+</div>
 
-<div>💰<br>Wallet</div>
+<div>
+💰<br>Wallet
+</div>
 
-<div>👤<br>Profile</div>
-
-<div>👑<br>Club</div>
+<div>
+👤<br>Profile
+</div>
 
 </div>
 
