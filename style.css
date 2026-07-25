@@ -19,6 +19,7 @@ margin:auto;
 padding:20px;
 padding-bottom:140px;
 text-align:center;
+animation:fadeIn .8s ease;
 }
 
 .crown{
@@ -53,11 +54,12 @@ background:#141414;
 padding:20px;
 border-radius:25px;
 margin-bottom:20px;
-border:1px solid rgba(255,215,0,0.3);
+border:1px solid rgba(255,215,0,.3);
 backdrop-filter:blur(12px);
 }
 
 .balance-card{
+background:linear-gradient(135deg,#141414,#1f1f1f);
 border:2px solid gold;
 box-shadow:0 0 20px rgba(255,215,0,.4);
 }
@@ -80,6 +82,7 @@ font-weight:bold;
 width:140px;
 box-shadow:0 0 15px rgba(255,215,0,.4);
 transition:.3s;
+cursor:pointer;
 }
 
 button:hover{
@@ -89,19 +92,20 @@ box-shadow:0 0 25px rgba(255,215,0,1);
 
 .games-grid{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:1fr 1fr 1fr;
 gap:15px;
 margin-bottom:30px;
 }
 
 .game-card{
 background:#101010;
-padding:35px;
+padding:20px;
+font-size:15px;
 border-radius:25px;
-font-size:18px;
 border:2px solid gold;
 box-shadow:0 0 15px rgba(255,215,0,.3);
 transition:.3s;
+cursor:pointer;
 }
 
 .game-card:hover{
@@ -188,6 +192,26 @@ margin-top:10px;
 100%{transform:scale(1);}
 }
 
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
 #main-app{
 display:none;
+}
+
+::-webkit-scrollbar{
+width:6px;
+}
+
+::-webkit-scrollbar-thumb{
+background:gold;
+border-radius:20px;
 }
