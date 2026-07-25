@@ -1,182 +1,145 @@
 body{
 margin:0;
 padding:0;
-background:#050505;
-font-family:sans-serif;
+background:#080b14;
 color:white;
-overflow-x:hidden;
+font-family:Arial,sans-serif;
 }
 
-
-/* КОНТЕЙНЕР */
-
 .wallet-container{
-max-width:600px;
-margin:auto;
-padding:25px;
-padding-bottom:50px;
+padding:20px;
+padding-bottom:40px;
 }
 
 
 /* HEADER */
 
-.wallet-header{
-
-text-align:center;
-margin-bottom:30px;
-
-}
-
 .wallet-header h1{
-
-color:#FFD700;
-margin-bottom:10px;
-font-size:32px;
-
-}
-
-.wallet-header h2{
-
-font-size:48px;
-margin:0;
-color:white;
-
-}
-
-.wallet-header p{
-
-color:#999;
-margin-top:10px;
-
+font-size:42px;
+margin-bottom:20px;
 }
 
 
-/* КНОПКИ */
+/* ВКЛАДКИ */
 
-.wallet-buttons{
-
+.wallet-tabs{
 display:flex;
 justify-content:space-between;
-gap:10px;
-margin-bottom:20px;
+align-items:center;
 
+background:#1b2130;
+border-radius:20px;
+
+padding:8px;
+margin-bottom:25px;
 }
 
-.wallet-buttons button{
-
+.wallet-tabs div{
 width:100%;
-padding:15px;
-
-border:none;
-border-radius:18px;
-
-background:#FFD700;
-color:black;
-
-font-weight:bold;
-font-size:15px;
-
-cursor:pointer;
-transition:.3s;
-
-box-shadow:0 0 15px rgba(255,215,0,.25);
-
-}
-
-.wallet-buttons button:hover{
-
-transform:scale(1.03);
-
-}
-
-
-/* БОНУС */
-
-.wallet-bonus{
-
-padding:20px;
 text-align:center;
-
-background:#111;
-
-border-radius:25px;
-border:1px solid gold;
-
-margin-bottom:25px;
-
+padding:14px;
+border-radius:15px;
+color:#8e94a3;
 font-weight:bold;
-font-size:18px;
+}
 
+.active-tab{
+background:#363c48;
+color:white !important;
 }
 
 
-/* БЛОКИ */
+/* БОНУСНЫЙ БАННЕР */
 
-.wallet-assets{
+.wallet-banner{
 
-padding:20px;
-
-background:#111;
-
+padding:25px;
 border-radius:25px;
+
+font-size:28px;
+font-weight:bold;
 
 margin-bottom:25px;
 
-border:1px solid rgba(255,215,0,.20);
-
-}
-
-.wallet-assets h2{
-
-margin-top:0;
-margin-bottom:20px;
-
-color:#FFD700;
+background:linear-gradient(90deg,#b845ff,#2f7dff);
 
 }
 
 
-/* КАРТОЧКИ */
+/* РЕГИОН */
 
-.asset-card{
+.wallet-region{
 
 display:flex;
 justify-content:space-between;
 align-items:center;
 
-padding:18px;
-
-margin-bottom:12px;
-
-background:#1a1a1a;
+background:#151a25;
+padding:20px;
 
 border-radius:20px;
 
-border:1px solid rgba(255,215,0,.15);
-
-transition:.3s;
-
-}
-
-.asset-card:hover{
-
-transform:scale(1.01);
-box-shadow:0 0 20px rgba(255,215,0,.15);
+font-size:24px;
+margin-bottom:30px;
 
 }
 
-.asset-card span{
 
-color:#FFD700;
+/* ЗАГОЛОВКИ */
+
+h2{
+font-size:38px;
+margin-bottom:20px;
+}
+
+
+/* КРИПТА */
+
+.crypto-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+
+/* КАРТОЧКА */
+
+.crypto-card{
+
+background:#151a25;
+
+border-radius:25px;
+
+padding:25px;
+
+font-size:28px;
 font-weight:bold;
 
+min-height:120px;
+
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+
 }
 
 
-/* СКРОЛЛ */
+/* ПРОЦЕНТ БОНУСА */
 
-::-webkit-scrollbar{
+.crypto-card span{
 
-display:none;
+display:inline-block;
+
+margin-top:15px;
+
+padding:8px 14px;
+
+background:white;
+color:#2f7dff;
+
+border-radius:15px;
+
+font-size:18px;
+width:max-content;
 
 }
