@@ -239,7 +239,32 @@ font-size:13px;
 
 font-weight:bold;
 
-}.game-card:hover{
+.game-card{
+
+background:#101010;
+
+padding:35px;
+
+border-radius:25px;
+
+font-size:18px;
+
+border:2px solid gold;
+
+box-shadow:0 0 15px rgba(255,215,0,0.3);
+
+transition:0.3s;
+
+}
+
+
+.game-card:hover{
+
+transform:scale(1.05);
+
+box-shadow:0 0 25px rgba(255,215,0,0.8);
+
+}
 
 transform:scale(1.05);
 
@@ -258,3 +283,31 @@ transform:scale(1.05);
 transform:scale(1.02);
 
 }
+
+button{
+
+box-shadow:0 0 15px rgba(255,215,0,0.4);
+
+transition:0.3s;
+
+}
+
+
+button:hover{
+
+transform:scale(1.05);
+
+box-shadow:0 0 25px rgba(255,215,0,1);
+
+}
+
+.logo{
+
+text-shadow:
+
+0 0 15px gold,
+
+0 0 25px gold;
+
+}
+
