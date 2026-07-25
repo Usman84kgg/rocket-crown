@@ -1,193 +1,275 @@
-body{
-margin:0;
-padding:0;
-overflow-x:hidden;
-min-height:100vh;
-background:linear-gradient(180deg,#050505,#101010,#050505);
-background-size:cover;
-font-family:sans-serif;
-color:white;
-}
+<!DOCTYPE html>
+<html lang="ru">
 
-*{
-box-sizing:border-box;
-}
+<head>
 
-.container{
-max-width:600px;
-margin:auto;
-padding:20px;
-padding-bottom:140px;
-text-align:center;
-}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-.crown{
-font-size:70px;
-margin-top:20px;
-}
+<title>Rocket Crown</title>
 
-.logo{
-font-size:32px;
-font-weight:bold;
-color:#FFD700;
-text-shadow:0 0 15px gold,0 0 25px gold;
-}
+<link rel="stylesheet" href="style.css">
 
-.subtitle{
-color:#999;
-margin-bottom:10px;
-}
+</head>
 
-.balance-card,
-.crown-points,
-.vip-card,
-.stats-card,
-.welcome-card,
-.live-wins,
-.notification,
-.support-card,
-.cashback-card,
-.daily-card,
-.jackpot{
-background:#141414;
-padding:20px;
-border-radius:25px;
-margin-bottom:20px;
-border:1px solid rgba(255,215,0,0.3);
-backdrop-filter:blur(12px);
-}
+<body>
 
-.balance-card{
-border:2px solid gold;
-box-shadow:0 0 20px rgba(255,215,0,.4);
-}
+<!-- Загрузочный экран -->
 
-.wallet-buttons{
-display:flex;
-justify-content:center;
-gap:15px;
-margin-bottom:30px;
-}
+<div id="loading-screen">
 
-button{
-background:#FFD700;
-color:black;
-border:none;
-padding:15px;
-border-radius:15px;
-font-size:16px;
-font-weight:bold;
-width:140px;
-box-shadow:0 0 15px rgba(255,215,0,.4);
-transition:.3s;
-}
+<div class="loading-logo">
+👑
+</div>
 
-button:hover{
-transform:scale(1.05);
-box-shadow:0 0 25px rgba(255,215,0,1);
-}
+<div class="loading-title">
+ROCKET CROWN
+</div>
 
-.games-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-margin-bottom:30px;
-}
+<div class="loading-subtitle">
+Premium Crypto Casino
+</div>
 
-.game-card{
-background:#101010;
-padding:35px;
-border-radius:25px;
-font-size:18px;
-border:2px solid gold;
-box-shadow:0 0 15px rgba(255,215,0,.3);
-transition:.3s;
-}
+</div>
 
-.game-card:hover{
-transform:scale(1.05);
-box-shadow:0 0 25px rgba(255,215,0,.8);
-}
 
-.bonus{
-background:#FFD700;
-color:black;
-padding:20px;
-border-radius:20px;
-font-weight:bold;
-margin-bottom:20px;
-}
+<!-- Главное приложение -->
 
-.bottom-menu{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-height:85px;
-background:#0f0f0f;
-border-top:1px solid rgba(255,215,0,.3);
-display:flex;
-justify-content:space-around;
-align-items:center;
-font-size:13px;
-font-weight:bold;
-box-shadow:0 -5px 20px rgba(255,215,0,.15);
-}
+<div class="container" id="main-app">
 
-.bottom-menu div{
-color:#FFD700;
-cursor:pointer;
-}
+<div class="crown">
+👑
+</div>
 
-h1{
-margin:5px;
-}
+<div class="logo">
+ROCKET CROWN
+</div>
 
-h2{
-color:#FFD700;
-}
+<div class="subtitle">
+Premium Crypto Casino
+</div>
 
-p{
-color:#cfcfcf;
-}
+<p>
+Level 1 Crown Member
+</p>
 
-#loading-screen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100vh;
-background:#050505;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:9999;
-}
 
-.loading-logo{
-font-size:90px;
-animation:glow 2s infinite;
-}
+<div class="notification">
 
-.loading-title{
-font-size:38px;
-font-weight:bold;
-color:#FFD700;
-margin-top:20px;
-}
+🔔 No notifications
 
-.loading-subtitle{
-color:#999;
-margin-top:10px;
-}
+</div>
 
-@keyframes glow{
-0%{transform:scale(1);}
-50%{transform:scale(1.1);}
-100%{transform:scale(1);}
-}
 
-#main-app{
-display:none;
-}
+<div class="welcome-card">
+
+<h2>WELCOME BACK</h2>
+
+<p>
+Good luck and enjoy your games!
+</p>
+
+</div>
+
+
+<!-- Баланс -->
+
+<div class="balance-card">
+
+<p>Balance</p>
+
+<h1>0.00 TON</h1>
+
+</div>
+
+
+<!-- Crown Points -->
+
+<div class="crown-points">
+
+<h2>CROWN POINTS</h2>
+
+<h1>0 CP</h1>
+
+</div>
+
+
+<!-- Статистика -->
+
+<div class="stats-card">
+
+<h2>YOUR STATS</h2>
+
+<p>Total Wins: 0 TON</p>
+
+<p>Total Games: 0</p>
+
+<p>Current Level: 1</p>
+
+</div>
+
+
+<!-- Кнопки кошелька -->
+
+<div class="wallet-buttons">
+
+<button>Deposit</button>
+
+<button>Withdraw</button>
+
+</div>
+
+
+<!-- Игры -->
+
+<h2>HOT GAMES</h2>
+
+<div class="games-grid">
+
+<div class="game-card">
+💣
+<br>
+MINES
+</div>
+
+<div class="game-card">
+🚀
+<br>
+CRASH
+</div>
+
+<div class="game-card">
+🎲
+<br>
+DICE
+</div>
+
+<div class="game-card">
+🎡
+<br>
+ROULETTE
+</div>
+
+<div class="game-card">
+🪙
+<br>
+COINFLIP
+</div>
+
+</div>
+
+
+<!-- Джекпот -->
+
+<div class="jackpot">
+
+<h2>
+🔥 JACKPOT OF THE DAY
+</h2>
+
+<h1>
+173 TON
+</h1>
+
+</div>
+
+
+<!-- Победы -->
+
+<div class="live-wins">
+
+<h2>
+LIVE WINS
+</h2>
+
+<p>
+@Player**** won 3.47 TON
+</p>
+
+</div>
+
+
+<!-- Бонус -->
+
+<div class="bonus">
+
+🎁 DAILY BONUS
+
+</div>
+
+
+<!-- VIP -->
+
+<div class="vip-card">
+
+<h2>VIP CLUB</h2>
+
+<p>
+Unlock exclusive rewards and cashback.
+</p>
+
+</div>
+
+
+<!-- Поддержка -->
+
+<div class="support-card">
+
+<h2>24/7 SUPPORT</h2>
+
+<p>
+Support is always online.
+</p>
+
+</div>
+
+
+<!-- Кэшбэк -->
+
+<div class="cashback-card">
+
+<h2>CROWN CASHBACK</h2>
+
+<p>
+0%
+</p>
+
+</div>
+
+
+<!-- Статистика дня -->
+
+<div class="daily-card">
+
+<h2>DAILY STATS</h2>
+
+<p>
+Today's Profit: 0 TON
+</p>
+
+</div>
+
+
+<!-- Нижнее меню -->
+
+<div class="bottom-menu">
+
+<div>🏠<br>Home</div>
+
+<div>🎰<br>Casino</div>
+
+<div>💰<br>Wallet</div>
+
+<div>👤<br>Profile</div>
+
+<div>👑<br>Club</div>
+
+</div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
