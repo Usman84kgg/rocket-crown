@@ -8,7 +8,9 @@ background:linear-gradient(
 #050505,
 #101010,
 #050505
-);
+min-height:100vh;
+
+background-size:cover;);
 
 font-family:sans-serif;
 
@@ -308,6 +310,57 @@ text-shadow:
 0 0 15px gold,
 
 0 0 25px gold;
+
+}
+
+.container{
+
+max-width:600px;
+
+margin:auto;
+
+}
+
+
+.welcome-card{
+
+background:#141414;
+
+padding:20px;
+
+border-radius:25px;
+
+margin-bottom:20px;
+
+border:1px solid rgba(255,215,0,0.3);
+
+}
+
+
+.stats-card{
+
+background:#141414;
+
+padding:20px;
+
+border-radius:25px;
+
+margin-bottom:20px;
+
+border:1px solid rgba(255,215,0,0.3);
+
+}
+
+
+.balance-card,
+.crown-points,
+.vip-card,
+.stats-card,
+.welcome-card,
+.live-wins,
+.notification{
+
+backdrop-filter:blur(12px);
 
 }
 
