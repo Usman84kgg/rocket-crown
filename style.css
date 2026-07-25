@@ -1,9 +1,14 @@
-body{
+body{overflow-x:hidden;
 
 margin:0;
 padding:0;
 
-background:#090909;
+background:linear-gradient(
+180deg,
+#050505,
+#101010,
+#050505
+);
 
 font-family:sans-serif;
 
@@ -50,7 +55,9 @@ margin-bottom:30px;
 }
 
 
-.balance-card{
+.balance-card{backdrop-filter:blur(10px);
+
+transition:0.3s;
 
 background:#141414;
 
@@ -99,7 +106,23 @@ width:140px;
 }
 
 
-.games-grid{
+.game-card{
+
+background:#111;
+
+padding:30px;
+
+border-radius:25px;
+
+font-weight:bold;
+
+border:2px solid #FFD700;
+
+box-shadow:0 0 15px rgba(255,215,0,0.25);
+
+transition:0.3s;
+
+}
 
 display:grid;
 
@@ -180,5 +203,23 @@ align-items:center;
 font-size:13px;
 
 font-weight:bold;
+
+}.game-card:hover{
+
+transform:scale(1.05);
+
+}
+
+
+button:hover{
+
+transform:scale(1.05);
+
+}
+
+
+.balance-card:hover{
+
+transform:scale(1.02);
 
 }
