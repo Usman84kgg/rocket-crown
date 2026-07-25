@@ -3,76 +3,68 @@ margin:0;
 padding:0;
 overflow-x:hidden;
 min-height:100vh;
-background-image:url("frontend/assets/54747EDA-261A-4C41-BA75-7C720FF033E1.PNG");
-background-size:50%;
-background-position:center;
-background-repeat:no-repeat;
-background-attachment:fixed;
+background:#050505;
 font-family:sans-serif;
-color:red
+color:white;
 }
 
 *{
 box-sizing:border-box;
 }
 
+#main-app{
+display:none;
+}
+
 .container{
 max-width:600px;
 margin:auto;
-padding:20px;
-padding-bottom:140px;
-text-align:center;
-animation:fadeIn .8s ease;
-backdrop-filter:blur(2px);
+padding-top:90px;
+padding-bottom:110px;
+padding-left:15px;
+padding-right:15px;
 }
 
-.crown{
-font-size:70px;
-margin-top:20px;
+/* Верхняя панель */
+
+.top-bar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:70px;
+background:#0f0f0f;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 20px;
+border-bottom:1px solid rgba(255,215,0,.3);
+z-index:1000;
 }
 
-.logo{
-font-size:32px;
+.top-logo{
+font-size:20px;
 font-weight:bold;
 color:#FFD700;
-text-shadow:0 0 15px gold,0 0 25px gold;
 }
 
-.subtitle{
-color:#999;
-margin-bottom:10px;
+.top-balance{
+font-weight:bold;
+color:white;
 }
 
-.balance-card,
-.crown-points,
-.vip-card,
-.stats-card,
-.welcome-card,
-.live-wins,
-.notification,
-.support-card,
-.cashback-card,
-.daily-card,
-.jackpot{
-background:rgba(15,15,15,0.78);
-padding:20px;
-border-radius:25px;
-margin-bottom:20px;
-border:1px solid rgba(255,215,0,0.35);
-backdrop-filter:blur(18px);
-box-shadow:0 0 25px rgba(255,215,0,0.15);
+.top-profile{
+font-size:25px;
+cursor:pointer;
 }
 
-.balance-card{
-border:2px solid gold;
-box-shadow:0 0 20px rgba(255,215,0,.4);
-}
+/* Кнопки */
 
 .wallet-buttons{
 display:flex;
 justify-content:center;
 gap:15px;
-margin-bottom:30px;
+margin-bottom:25px;
 }
 
 button{
@@ -84,47 +76,165 @@ border-radius:15px;
 font-size:16px;
 font-weight:bold;
 width:140px;
-box-shadow:0 0 15px rgba(255,215,0,.4);
-transition:.3s;
 cursor:pointer;
+box-shadow:0 0 15px rgba(255,215,0,.3);
+transition:.3s;
 }
 
 button:hover{
 transform:scale(1.05);
-box-shadow:0 0 25px rgba(255,215,0,1);
 }
 
+/* Бонусы */
+
+.bonus-slider{
+display:flex;
+overflow-x:auto;
+gap:15px;
+margin-bottom:25px;
+scrollbar-width:none;
+}
+
+.bonus-slider::-webkit-scrollbar{
+display:none;
+}
+
+.bonus-card{
+min-width:170px;
+padding:20px;
+background:#141414;
+border-radius:20px;
+border:1px solid gold;
+text-align:center;
+font-weight:bold;
+}
+
+/* Джекпот */
+
+.jackpot{
+background:#141414;
+padding:30px;
+border-radius:25px;
+text-align:center;
+margin-bottom:25px;
+border:1px solid gold;
+}
+
+.jackpot h1{
+font-size:45px;
+color:#FFD700;
+margin:10px 0;
+}
+
+.jackpot p{
+color:#bdbdbd;
+}
+
+/* Поиск */
+
+.search-games{
+margin-bottom:25px;
+}
+
+.search-games input{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+outline:none;
+font-size:16px;
+background:#141414;
+color:white;
+}
+
+/* Категории игр */
+
+.games-categories{
+display:flex;
+overflow-x:auto;
+gap:15px;
+margin-bottom:25px;
+scrollbar-width:none;
+}
+
+.games-categories::-webkit-scrollbar{
+display:none;
+}
+
+.games-categories div{
+background:#141414;
+padding:12px 20px;
+border-radius:15px;
+border:1px solid gold;
+white-space:nowrap;
+}
+
+/* Игры */
+
 .games-grid{
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
+display:flex;
+overflow-x:auto;
 gap:15px;
 margin-bottom:30px;
+scrollbar-width:none;
+}
+
+.games-grid::-webkit-scrollbar{
+display:none;
 }
 
 .game-card{
-background:#101010;
-padding:20px;
-font-size:15px;
+min-width:140px;
+height:140px;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:#141414;
 border-radius:25px;
-border:2px solid gold;
-box-shadow:0 0 15px rgba(255,215,0,.3);
-transition:.3s;
+border:1px solid gold;
+font-weight:bold;
+font-size:16px;
 cursor:pointer;
+transition:.3s;
 }
 
 .game-card:hover{
 transform:scale(1.05);
-box-shadow:0 0 25px rgba(255,215,0,.8);
 }
 
-.bonus{
-background:#FFD700;
-color:black;
+/* Live Wins */
+
+.live-wins{
+background:#141414;
 padding:20px;
 border-radius:20px;
-font-weight:bold;
-margin-bottom:20px;
+margin-bottom:25px;
+border:1px solid gold;
 }
+
+.live-wins p{
+white-space:nowrap;
+overflow:hidden;
+}
+
+/* Статистика */
+
+.stats-card{
+display:flex;
+justify-content:space-between;
+background:#141414;
+padding:20px;
+border-radius:20px;
+border:1px solid gold;
+margin-bottom:30px;
+}
+
+.stats-card p{
+margin:0;
+}
+
+/* Нижнее меню */
 
 .bottom-menu{
 position:fixed;
@@ -139,7 +249,7 @@ justify-content:space-around;
 align-items:center;
 font-size:13px;
 font-weight:bold;
-box-shadow:0 -5px 20px rgba(255,215,0,.15);
+z-index:1000;
 }
 
 .bottom-menu div{
@@ -147,17 +257,7 @@ color:#FFD700;
 cursor:pointer;
 }
 
-h1{
-margin:5px;
-}
-
-h2{
-color:#FFD700;
-}
-
-p{
-color:#cfcfcf;
-}
+/* Loading */
 
 #loading-screen{
 position:fixed;
@@ -186,36 +286,12 @@ margin-top:20px;
 }
 
 .loading-subtitle{
-color:#999;
 margin-top:10px;
+color:#999;
 }
 
 @keyframes glow{
 0%{transform:scale(1);}
 50%{transform:scale(1.1);}
 100%{transform:scale(1);}
-}
-
-@keyframes fadeIn{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-#main-app{
-display:none;
-}
-
-::-webkit-scrollbar{
-width:6px;
-}
-
-::-webkit-scrollbar-thumb{
-background:gold;
-border-radius:20px;
 }
