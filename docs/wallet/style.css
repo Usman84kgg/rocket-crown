@@ -1,1 +1,67 @@
-.
+body{
+margin:0;
+padding:0;
+background:#090909;
+font-family:sans-serif;
+color:white;
+}
+
+.wallet-container{
+padding:25px;
+}
+
+.wallet-header{
+text-align:center;
+margin-bottom:25px;
+}
+
+.wallet-header h1{
+color:#FFD700;
+margin-bottom:5px;
+}
+
+.wallet-header h2{
+font-size:40px;
+margin:0;
+}
+
+.wallet-buttons{
+display:flex;
+justify-content:space-between;
+gap:10px;
+margin-bottom:20px;
+}
+
+.wallet-buttons button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+background:#FFD700;
+font-weight:bold;
+}
+
+.wallet-bonus{
+padding:20px;
+background:#111;
+border-radius:20px;
+border:1px solid gold;
+text-align:center;
+margin-bottom:20px;
+}
+
+.asset-card{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px;
+margin-bottom:12px;
+background:#111;
+border-radius:20px;
+border:1px solid rgba(255,215,0,.25);
+}
+
+.asset-card span{
+color:#FFD700;
+font-weight:bold;
+}
