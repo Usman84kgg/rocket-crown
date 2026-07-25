@@ -3,27 +3,66 @@
 // =====================
 
 
-// ЗАГРУЗОЧНЫЙ ЭКРАН
+// LOADING SCREEN
 
 setTimeout(() => {
 
 document.getElementById("loading-screen").style.display = "none";
 document.getElementById("main-app").style.display = "block";
 
-}, 2500);
+},2000);
 
 
 // =====================
 // USER DATA
 // =====================
 
-let userBalance = 0.00;
-
 let userLevel = 1;
 
-let userProfit = 0.00;
 
-let cashbackEarned = 0.00;
+// ОБЩИЙ БАЛАНС В ДОЛЛАРАХ
+
+let totalBalanceUSD = 0.00;
+
+
+// =====================
+// АКТИВЫ ПОЛЬЗОВАТЕЛЯ
+// =====================
+
+const walletAssets = {
+
+USDT : 0,
+BTC : 0,
+ETH : 0,
+TON : 0,
+TRX : 0,
+SOL : 0,
+BNB : 0,
+DOGE : 0,
+XRP : 0,
+LTC : 0
+
+};
+
+
+// =====================
+// КУРСЫ КРИПТЫ
+// =====================
+
+const cryptoPrices = {
+
+USDT : 1,
+BTC : 0,
+ETH : 0,
+TON : 0,
+TRX : 0,
+SOL : 0,
+BNB : 0,
+DOGE : 0,
+XRP : 0,
+LTC : 0
+
+};
 
 
 // =====================
@@ -32,11 +71,11 @@ let cashbackEarned = 0.00;
 
 function updateBalance() {
 
-const balanceElement = document.querySelector(".top-balance");
+const balanceElement = document.querySelector(".balance");
 
-if (balanceElement) {
+if(balanceElement){
 
-balanceElement.innerHTML = `$ ${userBalance.toFixed(2)}`;
+balanceElement.innerHTML = "$" + totalBalanceUSD.toFixed(2);
 
 }
 
@@ -49,75 +88,146 @@ balanceElement.innerHTML = `$ ${userBalance.toFixed(2)}`;
 
 function updateLevel() {
 
-const levelElement = document.querySelector(".top-level");
+const levelElement = document.querySelector(".level");
 
-if (levelElement) {
+if(levelElement){
 
-levelElement.innerHTML = `LVL ${userLevel}`;
-
-}
+levelElement.innerHTML = "LVL " + userLevel;
 
 }
-
-
-// =====================
-// ОТКРЫТИЕ СТРАНИЦ
-// =====================
-
-function openHome() {
-
-window.location.href = "./index.html";
-
-}
-
-
-function openCasino() {
-
-window.location.href = "./games/index.html";
-
-}
-
-
-function openWallet() {
-
-window.location.href = "./wallet/index.html";
-
-}
-
-
-function openProfile() {
-
-window.location.href = "./profile/index.html";
 
 }
 
 
 // =====================
-// ЗАПУСК
+// ПОЛУЧЕНИЕ КУРСОВ КРИПТЫ
+// =====================
+
+
+// СЮДА ПОЗЖЕ ПОДКЛЮЧИМ API BINANCE
+// ИЛИ COINGECKO
+
+
+function updateCryptoPrices(){
+
+console.log("Crypto API Ready.");
+
+}
+
+
+// =====================
+// ДЕПОЗИТЫ
+// =====================
+
+function depositCrypto(){
+
+console.log("Deposit System Ready.");
+
+}
+
+
+// =====================
+// ВЫВОД СРЕДСТВ
+// =====================
+
+function withdrawCrypto(){
+
+console.log("Withdraw System Ready.");
+
+}
+
+
+// =====================
+// ИСТОРИЯ ТРАНЗАКЦИЙ
+// =====================
+
+function transactionHistory(){
+
+console.log("History Ready.");
+
+}
+
+
+// =====================
+// TELEGRAM WALLET
+// =====================
+
+function connectTelegramWallet(){
+
+console.log("Telegram Wallet Ready.");
+
+}
+
+
+// =====================
+// TON CONNECT
+// =====================
+
+function connectTONConnect(){
+
+console.log("TON Connect Ready.");
+
+}
+
+
+// =====================
+// VIP SYSTEM
+// =====================
+
+function updateVIP(){
+
+console.log("VIP System Ready.");
+
+}
+
+
+// =====================
+// CASHBACK SYSTEM
+// =====================
+
+function updateCashback(){
+
+console.log("Cashback System Ready.");
+
+}
+
+
+// =====================
+// PROMO SYSTEM
+// =====================
+
+function activatePromoCode(){
+
+console.log("Promo System Ready.");
+
+}
+
+
+// =====================
+// LIVE WINS
+// =====================
+
+function updateLiveWins(){
+
+console.log("Live Wins Ready.");
+
+}
+
+
+// =====================
+// JACKPOT SYSTEM
+// =====================
+
+function updateJackpot(){
+
+console.log("Jackpot Ready.");
+
+}
+
+
+// =====================
+// START
 // =====================
 
 updateBalance();
 updateLevel();
-
-
-// =====================
-// В БУДУЩЕМ
-// =====================
-
-// Автоматическое получение курса криптовалют.
-
-// Депозиты.
-
-// Вывод средств.
-
-// VIP система.
-
-// Crown Points.
-
-// Турниры.
-
-// Cashback.
-
-// Referral Program.
-
-// Telegram Mini App.
