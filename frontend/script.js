@@ -1,12 +1,26 @@
 // ЗАГРУЗОЧНЫЙ ЭКРАН
 
-setTimeout(function(){
+const PAGE_IDS = {
+  home: "home-page",
+  casino: "casino-page",
+  wallet: "wallet-page",
+  profile: "profile-page"
+};
 
-document.getElementById("loading-screen").style.display="none";
+function getElement(id) {
+  const element = document.getElementById(id);
+  if (!element) {
+    console.error(`Missing required element #${id}`);
+  }
+  return element;
+}
 
-document.getElementById("main-app").style.display="block";
-
-},2500);
+setTimeout(function () {
+  const loadingScreen = getElement("loading-screen");
+  const mainApp = getElement("main-app");
+  if (loadingScreen) loadingScreen.style.display = "none";
+  if (mainApp) mainApp.style.display = "block";
+}, 2500);
 
 
 // АНИМАЦИЯ БАЛАНСА
@@ -14,62 +28,30 @@ document.getElementById("main-app").style.display="block";
 let balance = 0;
 
 setInterval(() => {
-
-balance += 0.01;
-
-const balanceElement = document.querySelector(".top-balance");
-
-if(balanceElement){
-
-balanceElement.innerHTML = balance.toFixed(2) + " TON";
-
-}
-
-},3000);
+  balance += 0.01;
+  const balanceElement = document.querySelector(".top-balance");
+  if (balanceElement) {
+    balanceElement.innerHTML = balance.toFixed(2) + " TON";
+  }
+}, 3000);
 
 
 // ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
 
-function showPage(page){
+function showPage(page) {
+  const targetId = PAGE_IDS[page];
+  if (!targetId) {
+    console.error(`Unknown page: ${page}`);
+    return;
+  }
 
+  Object.values(PAGE_IDS).forEach((id) => {
+    const element = getElement(id);
+    if (element) element.style.display = "none";
+  });
 
-document.getElementById("home-page").style.display="none";
-
-document.getElementById("casino-page").style.display="none";
-
-document.getElementById("wallet-page").style.display="none";
-
-document.getElementById("profile-page").style.display="none";
-
-
-if(page==="home"){
-
-document.getElementById("home-page").style.display="block";
-
-}
-
-
-if(page==="casino"){
-
-document.getElementById("casino-page").style.display="block";
-
-}
-
-
-if(page==="wallet"){
-
-document.getElementById("wallet-page").style.display="block";
-
-}
-
-
-if(page==="profile"){
-
-document.getElementById("profile-page").style.display="block";
-
-}
-
-
+  const target = getElement(targetId);
+  if (target) target.style.display = "block";
 }
 
 

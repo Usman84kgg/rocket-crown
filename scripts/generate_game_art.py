@@ -24,13 +24,19 @@ def main():
         print('No SVG files found in', base)
         return 0
 
+    failures = 0
     for svg in svgs:
         out = svg.with_suffix('.png')
         try:
             svg2png(url=str(svg), write_to=str(out), output_width=1024, output_height=1024)
             print(f'Converted: {svg.name} -> {out.name}')
         except Exception as e:
+            failures += 1
             print(f'Failed to convert {svg.name}: {e}', file=sys.stderr)
+
+    if failures:
+        print(f'{failures} of {len(svgs)} conversions failed', file=sys.stderr)
+        return 1
 
     return 0
 

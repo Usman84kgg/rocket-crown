@@ -30,17 +30,42 @@ let state = loadState();
 let currentGame = null;
 
 function loadState() {
+  let saved = null;
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return { ...defaultState, ...saved, games: { ...defaultState.games, ...(saved?.games || {}) }, promos: saved?.promos || defaultState.promos, liveWins: saved?.liveWins || defaultState.liveWins, requests: saved?.requests || defaultState.requests, users: saved?.users || [] };
+    saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
   } catch (error) {
-    console.warn('State restore failed', error);
+    console.error('Stored state is corrupted and was discarded', error);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (removeError) {
+      console.error('Unable to clear corrupted state', removeError);
+    }
     return { ...defaultState };
   }
+  if (saved && typeof saved !== 'object') {
+    console.error('Stored state has an unexpected shape and was discarded');
+    return { ...defaultState };
+  }
+  return { ...defaultState, ...saved, games: { ...defaultState.games, ...(saved?.games || {}) }, promos: saved?.promos || defaultState.promos, liveWins: saved?.liveWins || defaultState.liveWins, requests: saved?.requests || defaultState.requests, users: saved?.users || [] };
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    return true;
+  } catch (error) {
+    console.error('Saving state failed', error);
+    showNotice('Could not save your progress on this device. Changes may be lost.');
+    return false;
+  }
+}
+
+function requireElement(id) {
+  const element = document.getElementById(id);
+  if (!element) {
+    throw new Error(`Missing required element #${id}`);
+  }
+  return element;
 }
 
 function showScreen(screenId) {
@@ -114,6 +139,9 @@ function addLiveWin(game, amount, player = 'Player') {
 }
 
 function randomInt(min, max) {
+  if (!window.crypto?.getRandomValues) {
+    throw new Error('Secure randomness is unavailable in this browser context.');
+  }
   const array = new Uint32Array(1);
   crypto.getRandomValues(array);
   return min + (array[0] % (max - min + 1));
@@ -132,14 +160,45 @@ function playGame(gameName, payload) {
     showNotice('This game is under maintenance.');
     return;
   }
-  const amount = Number(payload.amount || 0);
-  if (amount <= 0 || amount > (state.user.balance || 0)) {
+  const amount = Number(payload.amount);
+  if (!Number.isFinite(amount) || amount <= 0 || amount > (state.user.balance || 0)) {
     showNotice('Insufficient balance or invalid stake.');
     return;
   }
 
-  let result = { won: false, payout: 0, message: '' };
+  let result;
+  try {
+    result = resolveRound(gameName, payload, amount);
+  } catch (error) {
+    console.error(`Round for ${gameName} failed`, error);
+    showNotice('Round could not be played. Your balance was not changed.');
+    return;
+  }
+
   const stats = getUserStats(state.user);
+  const net = result.won ? result.payout - amount : -amount;
+  state.user.balance = Number(state.user.balance) + net;
+  stats.wins += result.won ? 1 : 0;
+  stats.losses += result.won ? 0 : 1;
+  stats.totalBet += amount;
+  state.user.stats = stats;
+
+  const existingUser = state.users.find((u) => u.id === state.user.id);
+  if (existingUser) {
+    Object.assign(existingUser, state.user);
+  }
+
+  if (result.won) {
+    addLiveWin(gameName.toUpperCase(), result.payout, state.user.nickname || state.user.name || 'Player');
+  }
+  saveState();
+  showNotice(result.message + ` Balance ${formatMoney(state.user.balance)}`);
+  render();
+  closeModal();
+}
+
+function resolveRound(gameName, payload, amount) {
+  const result = { won: false, payout: 0, message: '' };
 
   switch (gameName) {
     case 'mines': {
@@ -189,28 +248,10 @@ function playGame(gameName, payload) {
       break;
     }
     default:
-      break;
+      throw new Error(`Unknown game: ${gameName}`);
   }
 
-  const net = result.won ? result.payout - amount : -amount;
-  state.user.balance = Number(state.user.balance) + net;
-  stats.wins += result.won ? 1 : 0;
-  stats.losses += result.won ? 0 : 1;
-  stats.totalBet += amount;
-  state.user.stats = stats;
-
-  const existingUser = state.users.find((u) => u.id === state.user.id);
-  if (existingUser) {
-    Object.assign(existingUser, state.user);
-  }
-
-  if (result.won) {
-    addLiveWin(gameName.toUpperCase(), result.payout, state.user.nickname || state.user.name || 'Player');
-  }
-  saveState();
-  showNotice(result.message + ` Balance ${formatMoney(state.user.balance)}`);
-  render();
-  closeModal();
+  return result;
 }
 
 function toastStack() {
@@ -233,11 +274,15 @@ function showNotice(message) {
 }
 
 function openModal(content) {
+  if (!gameModal) {
+    throw new Error('Missing required element #gameModal');
+  }
   gameModal.innerHTML = content;
   gameModal.hidden = false;
 }
 
 function closeModal() {
+  if (!gameModal) return;
   gameModal.innerHTML = '';
   gameModal.hidden = true;
 }
@@ -320,11 +365,18 @@ function openGameModalByKey(gameKey) {
       ${gameFormMarkup(gameKey)}
     </div>
   `;
-  openModal(content);
-  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-  document.getElementById('gameForm').addEventListener('submit', (event) => {
+  try {
+    openModal(content);
+  } catch (error) {
+    console.error('Opening the game modal failed', error);
+    showNotice('Could not open this game right now.');
+    return;
+  }
+  requireElement('closeModalBtn').addEventListener('click', closeModal);
+  const gameForm = requireElement('gameForm');
+  gameForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    const formData = new FormData(document.getElementById('gameForm'));
+    const formData = new FormData(gameForm);
     const payload = Object.fromEntries(formData.entries());
     playGame(gameKey, payload);
   });
@@ -451,7 +503,7 @@ function renderProfile() {
     profilePanel.innerHTML = '<div class="info-card"><h3>Profile</h3><p>Please sign in to access your personal profile.</p></div>';
     settingsPanel.innerHTML = '<div class="info-card"><h3>Settings</h3><p>Sound and theme will appear once you enter the casino.</p></div>';
 
-    document.getElementById('authForm').addEventListener('submit', (event) => {
+    requireElement('authForm').addEventListener('submit', (event) => {
       event.preventDefault();
       const mode = document.getElementById('authMode').value;
       const identifier = document.getElementById('authIdentifier').value.trim();
@@ -531,7 +583,7 @@ function renderProfile() {
     <p>Personal ID: ${state.user.personalId}</p>
     <button id="logoutBtn" class="secondary-btn">Logout</button>
   `;
-  document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+  requireElement('logoutBtn').addEventListener('click', logoutUser);
 
   profilePanel.innerHTML = `
     <h3>Profile</h3>
@@ -550,9 +602,10 @@ function renderProfile() {
       <button type="submit">Save profile</button>
     </form>
   `;
-  document.getElementById('profileForm').addEventListener('submit', (event) => {
+  const profileForm = requireElement('profileForm');
+  profileForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    const formData = new FormData(document.getElementById('profileForm'));
+    const formData = new FormData(profileForm);
     const updates = Object.fromEntries(formData.entries());
     state.user = { ...state.user, ...updates, avatar: document.getElementById('avatarInput').value || state.user.avatar };
     const idx = state.users.findIndex((u) => u.id === state.user.id);
@@ -576,16 +629,16 @@ function renderProfile() {
     </div>
     <button id="logoutSettingsBtn" class="secondary-btn">Logout</button>
   `;
-  document.getElementById('soundToggle').addEventListener('change', (event) => {
+  requireElement('soundToggle').addEventListener('change', (event) => {
     state.sound = event.target.checked;
     saveState();
   });
-  document.getElementById('themeToggle').addEventListener('change', (event) => {
+  requireElement('themeToggle').addEventListener('change', (event) => {
     state.theme = event.target.checked ? 'dark' : 'light';
     applyTheme();
     saveState();
   });
-  document.getElementById('logoutSettingsBtn').addEventListener('click', logoutUser);
+  requireElement('logoutSettingsBtn').addEventListener('click', logoutUser);
 }
 
 function renderHome() {
@@ -641,13 +694,13 @@ function bindWalletForms() {
       showNotice('Login first to request a deposit.');
       return;
     }
-    const amount = Number(document.getElementById('depositAmount').value);
-    const method = document.getElementById('depositMethod').value;
+    const amount = Number(document.getElementById('depositAmount')?.value);
+    const method = document.getElementById('depositMethod')?.value;
     if (!state.depositsEnabled) {
       showNotice('Deposits are disabled for now.');
       return;
     }
-    if (!(amount > 0)) {
+    if (!Number.isFinite(amount) || amount <= 0) {
       showNotice('Enter a valid deposit amount.');
       return;
     }
@@ -663,10 +716,14 @@ function bindWalletForms() {
       showNotice('Login first to request a withdrawal.');
       return;
     }
-    const amount = Number(document.getElementById('withdrawAmount').value);
-    const address = document.getElementById('withdrawAddress').value.trim();
-    if (!(amount > 0)) {
-      showNotice('Enter a valid withdraw amount.');
+    const amount = Number(document.getElementById('withdrawAmount')?.value);
+    const address = (document.getElementById('withdrawAddress')?.value || '').trim();
+    if (!Number.isFinite(amount) || amount <= 0) {
+      showNotice('Enter a valid withdrawal amount.');
+      return;
+    }
+    if (!address) {
+      showNotice('Enter a withdrawal address.');
       return;
     }
     if (amount > (state.user.balance || 0)) {
@@ -683,16 +740,32 @@ function bindWalletForms() {
 
 function initLiveWinsLoop() {
   setInterval(() => {
-    if (!state.liveWins.length) return;
-    const sampleGames = ['Crash', 'Roulette', 'Dice', 'Mines'];
-    const samplePlayers = ['Nico', 'Rex', 'Lana', 'Toni', 'Jules'];
-    const randomIndex = Math.floor(Math.random() * sampleGames.length);
-    state.liveWins.unshift({ player: samplePlayers[randomIndex], game: sampleGames[randomIndex], amount: 100 + randomInt(1, 400), time: 'just now' });
-    state.liveWins = state.liveWins.slice(0, 8);
-    saveState();
-    renderLiveWins();
+    try {
+      pushSampleLiveWin();
+    } catch (error) {
+      console.error('Live wins update failed', error);
+    }
   }, 6000);
 }
+
+function pushSampleLiveWin() {
+  if (!state.liveWins.length) return;
+  const sampleGames = ['Crash', 'Roulette', 'Dice', 'Mines'];
+  const samplePlayers = ['Nico', 'Rex', 'Lana', 'Toni', 'Jules'];
+  const randomIndex = Math.floor(Math.random() * sampleGames.length);
+  state.liveWins.unshift({ player: samplePlayers[randomIndex], game: sampleGames[randomIndex], amount: 100 + randomInt(1, 400), time: 'just now' });
+  state.liveWins = state.liveWins.slice(0, 8);
+  saveState();
+  renderLiveWins();
+}
+
+window.addEventListener('error', (event) => {
+  console.error('Unhandled error', event.error || event.message);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection', event.reason);
+});
 
 function initStateSync() {
   window.addEventListener('storage', (event) => {
@@ -705,10 +778,15 @@ function initStateSync() {
   });
 }
 
-bindNavigation();
-bindWalletForms();
-initStateSync();
-applyTheme();
-render();
-initLiveWinsLoop();
-showScreen('homeScreen');
+try {
+  bindNavigation();
+  bindWalletForms();
+  initStateSync();
+  applyTheme();
+  render();
+  initLiveWinsLoop();
+  showScreen('homeScreen');
+} catch (error) {
+  console.error('Rocket Crown failed to start', error);
+  showNotice('Something went wrong while loading the casino. Please reload.');
+}
