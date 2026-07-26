@@ -104,7 +104,6 @@ function blockReason(gameName) {
   if (!state.user) return 'Please register or login first.';
   if (state.user.banned) return 'Your account is banned.';
   if (!state.games[gameName]) return 'This game is under maintenance.';
-  if (!state.depositsEnabled) return 'Deposits are temporarily disabled.';
   return null;
 }
 
@@ -124,7 +123,7 @@ function playGame(gameName, payload) {
   const result = game ? game.resolve(amount, payload.choice) : { won: false, payout: 0, message: '' };
   const stats = getUserStats(state.user);
 
-  const net = result.won ? amount + result.payout : -amount;
+  const net = result.won ? result.payout - amount : -amount;
   state.user.balance = Number(state.user.balance) + net;
   stats.wins += result.won ? 1 : 0;
   stats.losses += result.won ? 0 : 1;
@@ -133,7 +132,7 @@ function playGame(gameName, payload) {
   syncCurrentUser();
 
   if (result.won) {
-    addLiveWin(gameName.toUpperCase(), result.payout + amount, state.user.nickname || state.user.name || 'Player');
+    addLiveWin(gameName.toUpperCase(), result.payout, state.user.nickname || state.user.name || 'Player');
   }
   saveState();
   RCUtil.showToast(result.message + ` Balance ${RCUtil.formatMoney(state.user.balance)}`);
@@ -437,18 +436,17 @@ function bindNavigation() {
   });
 }
 
-function submitRequest({ type, prefix, amount, details }) {
-  state.requests.unshift({
+function createRequest(prefix, type, amount, extra) {
+  return {
     id: RCUtil.createId(prefix),
     type,
     amount,
-    ...details,
-    status: 'Pending • 5-15 min',
-    createdAt: Date.now()
-  });
-  saveState();
-  renderWallet();
-  RCUtil.showToast(`${type} request created. Processing in 5-15 minutes.`);
+    status: 'Pending',
+    userId: state.user?.id || null,
+    userLabel: state.user?.nickname || state.user?.identifier || 'Player',
+    createdAt: Date.now(),
+    ...extra
+  };
 }
 
 function bindWalletForms() {
@@ -461,12 +459,15 @@ function bindWalletForms() {
       RCUtil.showToast('Deposits are disabled for now.');
       return;
     }
-    submitRequest({
-      type: 'Deposit',
-      prefix: 'DEP',
-      amount: Number(RCUtil.byId('depositAmount').value),
-      details: { method: RCUtil.byId('depositMethod').value }
-    });
+    const amount = Number(RCUtil.byId('depositAmount').value);
+    if (!(amount > 0)) {
+      RCUtil.showToast('Enter a valid deposit amount.');
+      return;
+    }
+    state.requests.unshift(createRequest('DEP', 'Deposit', amount, { method: RCUtil.byId('depositMethod').value }));
+    saveState();
+    renderWallet();
+    RCUtil.showToast('Deposit request created. It will be confirmed manually.');
   });
 
   RCUtil.onSubmit('withdrawForm', () => {
@@ -475,16 +476,20 @@ function bindWalletForms() {
       return;
     }
     const amount = Number(RCUtil.byId('withdrawAmount').value);
+    const address = RCUtil.byId('withdrawAddress').value.trim();
+    if (!(amount > 0)) {
+      RCUtil.showToast('Enter a valid withdraw amount.');
+      return;
+    }
     if (amount > (state.user.balance || 0)) {
       RCUtil.showToast('Insufficient balance.');
       return;
     }
-    submitRequest({
-      type: 'Withdraw',
-      prefix: 'WD',
-      amount,
-      details: { address: RCUtil.byId('withdrawAddress').value.trim() }
-    });
+    updateUserBalance(-amount);
+    state.requests.unshift(createRequest('WD', 'Withdraw', amount, { address }));
+    saveState();
+    render();
+    RCUtil.showToast('Withdraw request created. Funds are on hold until it is confirmed.');
   });
 }
 
@@ -504,8 +509,20 @@ function initLiveWinsLoop() {
   }, 6000);
 }
 
+function initStateSync() {
+  window.addEventListener('storage', (event) => {
+    if (event.key !== STORAGE_KEY) return;
+    state = loadState();
+    if (state.user) {
+      state.user = state.users.find((user) => user.id === state.user.id) || state.user;
+    }
+    render();
+  });
+}
+
 bindNavigation();
 bindWalletForms();
+initStateSync();
 applyTheme();
 render();
 initLiveWinsLoop();
