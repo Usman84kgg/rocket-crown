@@ -389,6 +389,19 @@ revoke insert, update, delete on public.bets from anon, authenticated;
 revoke update, delete on public.payment_requests from anon, authenticated;
 revoke insert, delete on public.profiles from anon, authenticated;
 
+-- ---------------------------------------------------------------- realtime
+-- Lets a player's page update the moment the owner approves their payment.
+
+do $$
+begin
+  alter publication supabase_realtime add table public.profiles;
+exception when duplicate_object then null; end $$;
+
+do $$
+begin
+  alter publication supabase_realtime add table public.payment_requests;
+exception when duplicate_object then null; end $$;
+
 -- ---------------------------------------------------------------- owner setup
 -- Register in the app first, then run this once with your own email:
 --   update public.profiles set is_admin = true

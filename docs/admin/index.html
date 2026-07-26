@@ -23,10 +23,11 @@
       <section class="info-card" id="loginCard">
         <h3>Owner access</h3>
         <form id="adminLoginForm" class="action-form">
-          <input type="password" id="adminPasswordInput" placeholder="Admin password" required />
+          <input type="email" id="adminEmail" placeholder="Owner email" autocomplete="email" required />
+          <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password" required />
           <button type="submit">Enter</button>
         </form>
-        <p class="hint">Only the casino owner should use this page.</p>
+        <p class="hint" id="loginHint">Sign in with the casino account marked as owner.</p>
       </section>
 
       <div id="adminBody" hidden>
@@ -64,17 +65,16 @@
 
         <div class="info-card">
           <div class="section-title-row">
-            <h2>Owner password</h2>
+            <h2>Session</h2>
           </div>
-          <form id="passwordForm" class="action-form">
-            <input type="password" id="newPassword" placeholder="New admin password" minlength="6" required />
-            <button type="submit">Update password</button>
-          </form>
+          <button id="adminLogout" class="btn-neutral">Log out</button>
         </div>
       </div>
     </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7/dist/umd/supabase.js"></script>
+  <script src="../supabase-client.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
