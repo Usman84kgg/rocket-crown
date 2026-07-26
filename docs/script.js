@@ -204,11 +204,22 @@ function playGame(gameName, payload) {
   closeModal();
 }
 
+function toastStack() {
+  let stack = document.getElementById('toastStack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.id = 'toastStack';
+    stack.className = 'toast-stack';
+    document.body.appendChild(stack);
+  }
+  return stack;
+}
+
 function showNotice(message) {
   const notice = document.createElement('div');
   notice.className = 'toast';
   notice.textContent = message;
-  document.body.appendChild(notice);
+  toastStack().appendChild(notice);
   setTimeout(() => notice.remove(), 2600);
 }
 
