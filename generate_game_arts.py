@@ -6,6 +6,8 @@ Output: assets/games/{game_name}.png
 
 from PIL import Image, ImageDraw
 import math
+import sys
+from pathlib import Path
 
 SIZE = 1024
 HALF = SIZE // 2
@@ -189,7 +191,7 @@ def draw_crash(img, draw):
         )
 
 def generate_all():
-    """Generate all game artworks."""
+    """Generate all game artworks. Returns the number of failures."""
     games = {
         "mines": draw_mines,
         "coinflip": draw_coinflip,
@@ -197,16 +199,28 @@ def generate_all():
         "roulette": draw_roulette,
         "crash": draw_crash,
     }
-    
+
+    Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+
+    failures = 0
     for game_name, draw_func in games.items():
         print(f"Generating {game_name}...", end=" ")
-        img, draw = create_image((15, 10, 30))
-        draw_func(img, draw)
-        
         output_path = f"{OUTPUT_DIR}/{game_name}.png"
-        img.save(output_path, "PNG")
+        try:
+            img, draw = create_image((15, 10, 30))
+            draw_func(img, draw)
+            img.save(output_path, "PNG")
+        except OSError as error:
+            failures += 1
+            print(f"failed: {output_path}: {error}", file=sys.stderr)
+            continue
         print(f"✓ {output_path}")
 
+    return failures
+
 if __name__ == "__main__":
-    generate_all()
+    failed = generate_all()
+    if failed:
+        print(f"\n{failed} artwork(s) failed to generate.", file=sys.stderr)
+        raise SystemExit(1)
     print("\nAll artworks generated!")
