@@ -5,6 +5,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-ancestors https://web.telegram.org" />
 
 <title>Rocket Crown</title>
 
@@ -314,19 +315,19 @@ Rocket Crown Profile.
 
 <div class="bottom-menu">
 
-<div onclick="showPage('home')">
+<div data-page="home">
 🏠<br>Home
 </div>
 
-<div onclick="showPage('casino')">
+<div data-page="casino">
 🎰<br>Casino
 </div>
 
-<div onclick="showPage('wallet')">
+<div data-page="wallet">
 💰<br>Wallet
 </div>
 
-<div onclick="showPage('profile')">
+<div data-page="profile">
 👤<br>Profile
 </div>
 

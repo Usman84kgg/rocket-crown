@@ -21,7 +21,7 @@ const balanceElement = document.querySelector(".top-balance");
 
 if(balanceElement){
 
-balanceElement.innerHTML = balance.toFixed(2) + " TON";
+balanceElement.textContent = balance.toFixed(2) + " TON";
 
 }
 
@@ -71,6 +71,15 @@ document.getElementById("profile-page").style.display="block";
 
 
 }
+
+
+// НАВИГАЦИЯ ПО НИЖНЕМУ МЕНЮ
+
+document.querySelectorAll("[data-page]").forEach(item => {
+
+item.addEventListener("click", () => showPage(item.dataset.page));
+
+});
 
 
 // ГЛАВНАЯ СТРАНИЦА ОТКРЫТА ПО УМОЛЧАНИЮ

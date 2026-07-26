@@ -22,12 +22,59 @@ const defaultState = {
     { player: 'Dima', game: 'Dice', amount: 312, time: '2 min ago' }
   ],
   requests: [],
-  pendingAuth: null,
-  adminPassword: 'admin2026'
+  pendingAuth: null
 };
 
 let state = loadState();
 let currentGame = null;
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isSafeUrl(value) {
+  if (!value) return true;
+  try {
+    const url = new URL(value, window.location.href);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch (error) {
+    return false;
+  }
+}
+
+function randomHex(bytes) {
+  const array = new Uint8Array(bytes);
+  crypto.getRandomValues(array);
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function hashPassword(password, salt) {
+  const data = new TextEncoder().encode(`${salt}:${password}`);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function verifyPassword(user, password) {
+  if (typeof user.password === 'string') {
+    if (user.password !== password) return false;
+    await upgradeStoredPassword(user, password);
+    return true;
+  }
+  if (!user.passwordSalt || !user.passwordHash) return false;
+  return (await hashPassword(password, user.passwordSalt)) === user.passwordHash;
+}
+
+async function upgradeStoredPassword(user, password) {
+  user.passwordSalt = randomHex(16);
+  user.passwordHash = await hashPassword(password, user.passwordSalt);
+  delete user.password;
+  saveState();
+}
 
 function loadState() {
   try {
@@ -90,7 +137,7 @@ function logoutUser() {
 }
 
 function createId(prefix) {
-  return `${prefix}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+  return `${prefix}-${randomHex(3).toUpperCase()}`;
 }
 
 function addLiveWin(game, amount, player = 'Player') {
@@ -124,7 +171,7 @@ function playGame(gameName, payload) {
     return;
   }
   const amount = Number(payload.amount || 0);
-  if (amount <= 0 || amount > (state.user.balance || 0)) {
+  if (!Number.isFinite(amount) || amount <= 0 || amount > (state.user.balance || 0)) {
     showNotice('Insufficient balance or invalid stake.');
     return;
   }
@@ -372,9 +419,9 @@ function renderPromoList() {
   if (!container) return;
   container.innerHTML = state.promos.map((promo) => `
     <div class="promo-card">
-      <strong>${promo.title}</strong>
-      <p>${promo.value}</p>
-      <span>${promo.text}</span>
+      <strong>${escapeHtml(promo.title)}</strong>
+      <p>${escapeHtml(promo.value)}</p>
+      <span>${escapeHtml(promo.text)}</span>
     </div>
   `).join('');
 }
@@ -383,7 +430,7 @@ function renderLiveWins() {
   const container = document.getElementById('liveWinsList');
   if (!container) return;
   container.innerHTML = state.liveWins.map((item) => `
-    <li><strong>${item.player}</strong> won ${formatMoney(item.amount)} in ${item.game} • ${item.time}</li>
+    <li><strong>${escapeHtml(item.player)}</strong> won ${formatMoney(item.amount)} in ${escapeHtml(item.game)} • ${escapeHtml(item.time)}</li>
   `).join('');
 }
 
@@ -398,8 +445,8 @@ function renderWallet() {
   }
   requests.innerHTML = state.requests.map((req) => `
     <div class="request-item">
-      <div><strong>${req.type}</strong> • ${formatMoney(req.amount)} • ${req.method || req.address || 'manual'}</div>
-      <div>${req.status}</div>
+      <div><strong>${escapeHtml(req.type)}</strong> • ${formatMoney(req.amount)} • ${escapeHtml(req.method || req.address || 'manual')}</div>
+      <div>${escapeHtml(req.status)}</div>
     </div>
   `).join('');
 }
@@ -431,7 +478,7 @@ function renderProfile() {
     profilePanel.innerHTML = '<div class="info-card"><h3>Profile</h3><p>Please sign in to access your personal profile.</p></div>';
     settingsPanel.innerHTML = '<div class="info-card"><h3>Settings</h3><p>Sound and theme will appear once you enter the casino.</p></div>';
 
-    document.getElementById('authForm').addEventListener('submit', (event) => {
+    document.getElementById('authForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const mode = document.getElementById('authMode').value;
       const identifier = document.getElementById('authIdentifier').value.trim();
@@ -449,13 +496,15 @@ function renderProfile() {
               showNotice('This account already exists. Please login.');
               return;
             }
+            const salt = randomHex(16);
             const user = {
               id: createId('USR'),
               identifier,
-              password,
+              passwordSalt: salt,
+              passwordHash: await hashPassword(password, salt),
               name,
               surname,
-              nickname: nickname || `${name || 'player'}${Math.floor(Math.random() * 90 + 10)}`,
+              nickname: nickname || `${name || 'player'}${randomInt(10, 99)}`,
               balance: 2500,
               phone: '',
               email: '',
@@ -485,8 +534,7 @@ function renderProfile() {
           name,
           surname,
           nickname,
-          password,
-          code: Math.floor(1000 + Math.random() * 9000)
+          code: randomInt(1000, 9999)
         };
         saveState();
         document.getElementById('authCode').style.display = 'block';
@@ -494,9 +542,9 @@ function renderProfile() {
         return;
       }
 
-      const user = state.users.find((candidate) => candidate.identifier === identifier && candidate.password === password);
-      if (user) {
-        loginUser(user);
+      const candidate = state.users.find((entry) => entry.identifier === identifier);
+      if (candidate && (await verifyPassword(candidate, password))) {
+        loginUser(candidate);
         showNotice('Welcome back.');
       } else {
         showNotice('No matching account found.');
@@ -507,8 +555,8 @@ function renderProfile() {
 
   authPanel.innerHTML = `
     <h3>Signed in</h3>
-    <p>${state.user.nickname || state.user.name || state.user.identifier}</p>
-    <p>Personal ID: ${state.user.personalId}</p>
+    <p>${escapeHtml(state.user.nickname || state.user.name || state.user.identifier)}</p>
+    <p>Personal ID: ${escapeHtml(state.user.personalId)}</p>
     <button id="logoutBtn" class="secondary-btn">Logout</button>
   `;
   document.getElementById('logoutBtn').addEventListener('click', logoutUser);
@@ -517,16 +565,16 @@ function renderProfile() {
     <h3>Profile</h3>
     <form id="profileForm" class="profile-form">
       <div class="profile-grid">
-        <label>First name<input name="name" value="${state.user.name || ''}" /></label>
-        <label>Last name<input name="surname" value="${state.user.surname || ''}" /></label>
-        <label>Nickname<input name="nickname" value="${state.user.nickname || ''}" /></label>
-        <label>Phone<input name="phone" value="${state.user.phone || ''}" /></label>
-        <label>Email<input name="email" value="${state.user.email || ''}" /></label>
-        <label>Gender<input name="gender" value="${state.user.gender || ''}" /></label>
-        <label>Date of birth<input name="birthDate" type="date" value="${state.user.birthDate || ''}" /></label>
-        <label>Personal ID<input name="personalId" value="${state.user.personalId || ''}" disabled /></label>
+        <label>First name<input name="name" value="${escapeHtml(state.user.name)}" /></label>
+        <label>Last name<input name="surname" value="${escapeHtml(state.user.surname)}" /></label>
+        <label>Nickname<input name="nickname" value="${escapeHtml(state.user.nickname)}" /></label>
+        <label>Phone<input name="phone" value="${escapeHtml(state.user.phone)}" /></label>
+        <label>Email<input name="email" value="${escapeHtml(state.user.email)}" /></label>
+        <label>Gender<input name="gender" value="${escapeHtml(state.user.gender)}" /></label>
+        <label>Date of birth<input name="birthDate" type="date" value="${escapeHtml(state.user.birthDate)}" /></label>
+        <label>Personal ID<input name="personalId" value="${escapeHtml(state.user.personalId)}" disabled /></label>
       </div>
-      <label>Avatar URL<input id="avatarInput" type="url" value="${state.user.avatar || ''}" /></label>
+      <label>Avatar URL<input id="avatarInput" type="url" value="${escapeHtml(state.user.avatar)}" /></label>
       <button type="submit">Save profile</button>
     </form>
   `;
@@ -534,7 +582,13 @@ function renderProfile() {
     event.preventDefault();
     const formData = new FormData(document.getElementById('profileForm'));
     const updates = Object.fromEntries(formData.entries());
-    state.user = { ...state.user, ...updates, avatar: document.getElementById('avatarInput').value || state.user.avatar };
+    const avatar = document.getElementById('avatarInput').value.trim();
+    if (!isSafeUrl(avatar)) {
+      showNotice('Avatar URL must be an http(s) link.');
+      return;
+    }
+    delete updates.personalId;
+    state.user = { ...state.user, ...updates, avatar: avatar || state.user.avatar };
     const idx = state.users.findIndex((u) => u.id === state.user.id);
     if (idx >= 0) {
       state.users[idx] = { ...state.users[idx], ...state.user };
@@ -627,6 +681,10 @@ function bindWalletForms() {
       showNotice('Deposits are disabled for now.');
       return;
     }
+    if (!Number.isFinite(amount) || amount <= 0) {
+      showNotice('Enter a valid deposit amount.');
+      return;
+    }
     state.requests.unshift({ id: createId('DEP'), type: 'Deposit', amount, method, status: 'Pending • 5-15 min', createdAt: Date.now() });
     saveState();
     renderWallet();
@@ -641,6 +699,14 @@ function bindWalletForms() {
     }
     const amount = Number(document.getElementById('withdrawAmount').value);
     const address = document.getElementById('withdrawAddress').value.trim();
+    if (!Number.isFinite(amount) || amount <= 0) {
+      showNotice('Enter a valid withdrawal amount.');
+      return;
+    }
+    if (!/^[A-Za-z0-9:_-]{8,128}$/.test(address)) {
+      showNotice('Enter a valid wallet address.');
+      return;
+    }
     if (amount > (state.user.balance || 0)) {
       showNotice('Insufficient balance.');
       return;
