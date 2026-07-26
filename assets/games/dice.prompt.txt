@@ -1,0 +1,5 @@
+English prompt:
+"Square 1024x1024 artwork for a 'Dice' casino game. Center: a glossy white die showing 'six' face, with gold rounded edges, slight tilt and soft shadow, background: dark casino table felt with neon rim lighting (teal/purple). Color palette: white, gold, deep green/teal. Style: semi-realistic, high-detail, clean composition, no logos or text, square crop."
+
+Russian guidance:
+"Квадрат 1024×1024: белый фишечный кубик с шестеркой, золотой кант, неоновый фон."

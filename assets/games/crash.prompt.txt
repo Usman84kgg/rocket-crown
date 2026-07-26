@@ -1,0 +1,5 @@
+English prompt:
+"Square 1024x1024 artwork for a 'Crash' casino game. Center: stylized rising graph/rocket bursting through neon clouds, glowing trail, dynamic motion, background: dark gradient with casino neon accents (electric blue, hot pink). Color palette: electric blue, hot pink, black, gold accents. Style: energetic, futuristic neon-casino, high contrast, no text or logos, square crop."
+
+Russian guidance:
+"Квадрат 1024×1024: взлетающий график/ракета с неоновым следом, динамика и яркие акценты."

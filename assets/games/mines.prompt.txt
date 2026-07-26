@@ -1,0 +1,5 @@
+English prompt (for image generator):
+"Square 1024x1024 artwork for a casino 'Mines' game. Center composition: a stylized, glossy black mine with metal texture and a lit spark fuse, placed on a neon-lit casino background with subtle slot-machine glyphs. Color palette: deep purples, magenta, electric blue, gold highlights. Lighting: dramatic rim light, soft bloom, high contrast. Style: modern neon casino, semi-realistic, clean iconography, no text or logos, no watermarks. Crop tightly to fill the square. Deliver high detail, 4k look (but 1024x1024 output)."
+
+Russian guidance for review:
+"Квадратное изображение 1024×1024: стилизованная чёрная мина с искрой фитиля на неоновом казино-фоне. Без текста и логотипов, яркие неоновые акценты."

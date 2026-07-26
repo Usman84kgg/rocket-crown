@@ -1,0 +1,5 @@
+English prompt:
+"Square 1024x1024 artwork for a 'Roulette' casino game. Center: top-down view of a roulette wheel segment, rich wood texture and metallic gold details, balls on pockets, shallow depth of field, background: dark luxurious casino cloth with soft neon rim light (warm gold + magenta). Color palette: mahogany, gold, black, red. Style: luxurious, semi-realistic, high-detail, no text/logos, square crop."
+
+Russian guidance:
+"Квадрат 1024×1024: фрагмент рулетки сверху, тёплая древесина и золото, элегантный фон."

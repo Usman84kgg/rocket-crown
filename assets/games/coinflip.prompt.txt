@@ -1,0 +1,5 @@
+English prompt:
+"Square 1024x1024 artwork for a 'Coin Flip' casino game. Center: a shiny gold coin slightly tilted, engraved crown emblem on the face, mid-air motion blur suggesting flip, background: dark velvet with neon rim light (cyan and magenta), subtle casino bokeh lights. Color palette: gold, deep teal, magenta. Style: polished, semi-realistic, high-detail icon, no text or trademarks, square crop, cinematic lighting."
+
+Russian guidance:
+"Квадрат 1024×1024: летающая золотая монета с короной, неоновый контраст, без текста."

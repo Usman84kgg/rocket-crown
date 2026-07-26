@@ -1,0 +1,2 @@
+# Dependencies for local image generation
+cairosvg>=2.5.2
