@@ -79,11 +79,22 @@ const RCUtil = {
     return items[Math.floor(Math.random() * items.length)];
   },
 
+  toastStack() {
+    let stack = RCUtil.byId('toastStack');
+    if (!stack) {
+      stack = document.createElement('div');
+      stack.id = 'toastStack';
+      stack.className = 'toast-stack';
+      document.body.appendChild(stack);
+    }
+    return stack;
+  },
+
   showToast(message) {
     const notice = document.createElement('div');
     notice.className = 'toast';
     notice.textContent = message;
-    document.body.appendChild(notice);
+    RCUtil.toastStack().appendChild(notice);
     setTimeout(() => notice.remove(), 2600);
   },
 
