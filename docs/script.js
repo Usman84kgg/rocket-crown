@@ -1,9 +1,9 @@
 const STORAGE_KEY = 'rocket-crown-state-v1';
-const menuButton = document.getElementById('menuButton');
-const menuPanel = document.getElementById('menuPanel');
+const menuButton = RCUtil.byId('menuButton');
+const menuPanel = RCUtil.byId('menuPanel');
 const navButtons = document.querySelectorAll('.nav-btn');
 const screens = document.querySelectorAll('.screen');
-const gameModal = document.getElementById('gameModal');
+const gameModal = RCUtil.byId('gameModal');
 
 const defaultState = {
   user: null,
@@ -11,7 +11,7 @@ const defaultState = {
   theme: 'dark',
   sound: true,
   depositsEnabled: true,
-  games: { mines: true, crash: true, dice: true, roulette: true, coinflip: true, plinko: true },
+  games: Object.fromEntries(GAME_CATALOG.map((game) => [game.key, true])),
   promos: [
     { id: 1, title: 'Welcome Boost', value: '100% bonus', text: 'Boost your first deposit instantly.' },
     { id: 2, title: 'VIP Reload', value: '50% free', text: 'Use on every Friday reload.' }
@@ -30,17 +30,25 @@ let state = loadState();
 let currentGame = null;
 
 function loadState() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return { ...defaultState, ...saved, games: { ...defaultState.games, ...(saved?.games || {}) }, promos: saved?.promos || defaultState.promos, liveWins: saved?.liveWins || defaultState.liveWins, requests: saved?.requests || defaultState.requests, users: saved?.users || [] };
-  } catch (error) {
-    console.warn('State restore failed', error);
-    return { ...defaultState };
-  }
+  const saved = RCUtil.readJSON(STORAGE_KEY);
+  return {
+    ...defaultState,
+    ...saved,
+    games: { ...defaultState.games, ...(saved?.games || {}) },
+    promos: saved?.promos || defaultState.promos,
+    liveWins: saved?.liveWins || defaultState.liveWins,
+    requests: saved?.requests || defaultState.requests,
+    users: saved?.users || []
+  };
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  RCUtil.writeJSON(STORAGE_KEY, state);
+}
+
+function syncCurrentUser() {
+  const existing = state.users.find((candidate) => candidate.id === state.user?.id);
+  if (existing) Object.assign(existing, state.user);
 }
 
 function showScreen(screenId) {
@@ -57,10 +65,6 @@ function applyTheme() {
   document.documentElement.style.setProperty('--bg', state.theme === 'dark' ? '#050816' : '#160d03');
 }
 
-function formatMoney(value) {
-  return `$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
-
 function getUserStats(user) {
   return user?.stats || { wins: 0, losses: 0, totalBet: 0 };
 }
@@ -68,11 +72,7 @@ function getUserStats(user) {
 function updateUserBalance(amount) {
   if (!state.user) return;
   state.user.balance = Number(state.user.balance || 0) + Number(amount);
-  const existing = state.users.find((u) => u.id === state.user.id);
-  if (existing) {
-    existing.balance = state.user.balance;
-    Object.assign(existing, state.user);
-  }
+  syncCurrentUser();
   saveState();
 }
 
@@ -89,99 +89,40 @@ function logoutUser() {
   render();
 }
 
-function createId(prefix) {
-  return `${prefix}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-}
-
 function addLiveWin(game, amount, player = 'Player') {
-  state.liveWins.unshift({ player, game, amount, time: 'just now' });
-  state.liveWins = state.liveWins.slice(0, 8);
-  saveState();
+  pushLiveWin({ player, game, amount, time: 'just now' });
   renderLiveWins();
 }
 
-function randomInt(min, max) {
-  const array = new Uint32Array(1);
-  crypto.getRandomValues(array);
-  return min + (array[0] % (max - min + 1));
+function pushLiveWin(win) {
+  state.liveWins.unshift(win);
+  state.liveWins = state.liveWins.slice(0, 8);
+  saveState();
+}
+
+function blockReason(gameName) {
+  if (!state.user) return 'Please register or login first.';
+  if (state.user.banned) return 'Your account is banned.';
+  if (!state.games[gameName]) return 'This game is under maintenance.';
+  if (!state.depositsEnabled) return 'Deposits are temporarily disabled.';
+  return null;
 }
 
 function playGame(gameName, payload) {
-  if (!state.user) {
-    showNotice('Please register or login first.');
-    return;
-  }
-  if (state.user.banned) {
-    showNotice('Your account is banned.');
-    return;
-  }
-  if (!state.games[gameName]) {
-    showNotice('This game is under maintenance.');
-    return;
-  }
-  if (!state.depositsEnabled) {
-    showNotice('Deposits are temporarily disabled.');
+  const blocked = blockReason(gameName);
+  if (blocked) {
+    RCUtil.showToast(blocked);
     return;
   }
   const amount = Number(payload.amount || 0);
   if (amount <= 0 || amount > (state.user.balance || 0)) {
-    showNotice('Insufficient balance or invalid stake.');
+    RCUtil.showToast('Insufficient balance or invalid stake.');
     return;
   }
 
-  let result = { won: false, payout: 0, message: '' };
+  const game = GAMES_BY_KEY[gameName];
+  const result = game ? game.resolve(amount, payload.choice) : { won: false, payout: 0, message: '' };
   const stats = getUserStats(state.user);
-
-  switch (gameName) {
-    case 'mines': {
-      const correct = randomInt(0, 1) === 1;
-      result.won = correct;
-      result.payout = correct ? amount * 1.9 : 0;
-      result.message = correct ? 'Safe step. You won.' : 'Mine exploded. You lost.';
-      break;
-    }
-    case 'coinflip': {
-      const choice = payload.choice;
-      const flip = randomInt(0, 1) === 0 ? 'heads' : 'tails';
-      result.won = flip === choice;
-      result.payout = result.won ? amount * 1.95 : 0;
-      result.message = result.won ? `Coin landed ${flip}. You won.` : `Coin landed ${flip}. You lost.`;
-      break;
-    }
-    case 'dice': {
-      const roll = randomInt(1, 6);
-      const target = payload.choice === 'high' ? roll >= 4 : roll <= 3;
-      result.won = target;
-      result.payout = result.won ? amount * 1.85 : 0;
-      result.message = `Dice rolled ${roll}. ${result.won ? 'You won.' : 'You lost.'}`;
-      break;
-    }
-    case 'roulette': {
-      const colors = ['red', 'black', 'green'];
-      const pick = colors[randomInt(0, 2)];
-      const win = payload.choice === pick;
-      result.won = win;
-      result.payout = win ? (payload.choice === 'green' ? amount * 8 : amount * 1.9) : 0;
-      result.message = `Roulette landed on ${pick}. ${win ? 'You won.' : 'You lost.'}`;
-      break;
-    }
-    case 'crash': {
-      const multiplier = (1 + randomInt(1, 30) / 10).toFixed(1);
-      result.won = Number(multiplier) >= Number(payload.choice);
-      result.payout = result.won ? amount * Number(multiplier) : 0;
-      result.message = `Crash multiplier ${multiplier}x. ${result.won ? 'You won.' : 'You lost.'}`;
-      break;
-    }
-    case 'plinko': {
-      const drop = randomInt(0, 1) === 0;
-      result.won = drop;
-      result.payout = result.won ? amount * 2 : 0;
-      result.message = result.won ? 'Plinko dropped into a win pocket.' : 'Plinko dropped into a losing pocket.';
-      break;
-    }
-    default:
-      break;
-  }
 
   const net = result.won ? amount + result.payout : -amount;
   state.user.balance = Number(state.user.balance) + net;
@@ -189,27 +130,15 @@ function playGame(gameName, payload) {
   stats.losses += result.won ? 0 : 1;
   stats.totalBet += amount;
   state.user.stats = stats;
-
-  const existingUser = state.users.find((u) => u.id === state.user.id);
-  if (existingUser) {
-    Object.assign(existingUser, state.user);
-  }
+  syncCurrentUser();
 
   if (result.won) {
     addLiveWin(gameName.toUpperCase(), result.payout + amount, state.user.nickname || state.user.name || 'Player');
   }
   saveState();
-  showNotice(result.message + ` Balance ${formatMoney(state.user.balance)}`);
+  RCUtil.showToast(result.message + ` Balance ${RCUtil.formatMoney(state.user.balance)}`);
   render();
   closeModal();
-}
-
-function showNotice(message) {
-  const notice = document.createElement('div');
-  notice.className = 'toast';
-  notice.textContent = message;
-  document.body.appendChild(notice);
-  setTimeout(() => notice.remove(), 2600);
 }
 
 function openModal(content) {
@@ -222,48 +151,23 @@ function closeModal() {
   gameModal.hidden = true;
 }
 
-function renderGames() {
-  const container = document.getElementById('gamesCarousel');
-  if (!container) return;
-  const games = [
-    { key: 'mines', name: 'Mines', art: 'assets/games/mines.png' },
-    { key: 'crash', name: 'Crash', art: 'assets/games/crash.png' },
-    { key: 'dice', name: 'Dice', art: 'assets/games/dice.png' },
-    { key: 'roulette', name: 'Roulette', art: 'assets/games/roulette.png' },
-    { key: 'coinflip', name: 'Coinflip', art: 'assets/games/coinflip.png' },
-    { key: 'plinko', name: 'Plinko', art: 'assets/games/mines.png' }
-  ];
+function renderGameList(containerId, cardMarkup) {
+  const container = RCUtil.renderList(containerId, GAME_CATALOG, (game) => cardMarkup(game, !state.games[game.key]));
+  RCUtil.bindEach(container, '[data-game]', 'click', (element) => openGameModalByKey(element.dataset.game));
+}
 
-  container.innerHTML = games.map((game) => {
-    const disabled = !state.games[game.key];
-    return `
+function renderGames() {
+  renderGameList('gamesCarousel', (game, disabled) => `
       <button class="game-card ${disabled ? 'disabled' : ''}" data-game="${game.key}">
         <img src="${game.art}" alt="${game.name}" />
         <span class="game-title">${game.name}</span>
         <small>${disabled ? 'Maintenance' : 'Play now'}</small>
       </button>
-    `;
-  }).join('');
-
-  container.querySelectorAll('[data-game]').forEach((button) => {
-    button.addEventListener('click', () => openGameModalByKey(button.dataset.game));
-  });
+    `);
 }
 
 function renderCasino() {
-  const container = document.getElementById('casinoGrid');
-  if (!container) return;
-  const games = [
-    { key: 'mines', name: 'Mines', art: 'assets/games/mines.png' },
-    { key: 'crash', name: 'Crash', art: 'assets/games/crash.png' },
-    { key: 'dice', name: 'Dice', art: 'assets/games/dice.png' },
-    { key: 'roulette', name: 'Roulette', art: 'assets/games/roulette.png' },
-    { key: 'coinflip', name: 'Coinflip', art: 'assets/games/coinflip.png' },
-    { key: 'plinko', name: 'Plinko', art: 'assets/games/mines.png' }
-  ];
-  container.innerHTML = games.map((game) => {
-    const disabled = !state.games[game.key];
-    return `
+  renderGameList('casinoGrid', (game, disabled) => `
       <div class="casino-card ${disabled ? 'disabled' : ''}" data-game="${game.key}">
         <img src="${game.art}" alt="${game.name}" />
         <div class="casino-card__meta">
@@ -271,249 +175,73 @@ function renderCasino() {
           <span>${disabled ? 'Soon / Technical works' : 'Live now'}</span>
         </div>
       </div>
-    `;
-  }).join('');
-  container.querySelectorAll('[data-game]').forEach((card) => {
-    card.addEventListener('click', () => openGameModalByKey(card.dataset.game));
-  });
+    `);
 }
 
 function openGameModalByKey(gameKey) {
   if (!state.games[gameKey]) {
-    showNotice('This game is unavailable right now.');
+    RCUtil.showToast('This game is unavailable right now.');
     return;
   }
   currentGame = gameKey;
-  const labels = {
-    mines: 'Mines',
-    crash: 'Crash',
-    dice: 'Dice',
-    roulette: 'Roulette',
-    coinflip: 'Coinflip',
-    plinko: 'Plinko'
-  };
-  const content = `
+  openModal(`
     <div class="modal-card">
       <button class="modal-close" id="closeModalBtn">×</button>
-      <h3>${labels[gameKey]}</h3>
+      <h3>${GAMES_BY_KEY[gameKey].name}</h3>
       <p class="modal-subtitle">Provably fair random rounds.</p>
       ${gameFormMarkup(gameKey)}
     </div>
-  `;
-  openModal(content);
-  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-  document.getElementById('gameForm').addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = new FormData(document.getElementById('gameForm'));
-    const payload = Object.fromEntries(formData.entries());
-    playGame(gameKey, payload);
-  });
-}
-
-function gameFormMarkup(gameKey) {
-  const common = `
-    <form id="gameForm" class="game-form">
-      <label>Stake
-        <input type="number" name="amount" min="10" step="10" placeholder="Amount" required />
-      </label>
-  `;
-  switch (gameKey) {
-    case 'mines':
-      return `${common}<label>Choose safe / risky
-        <select name="choice">
-          <option value="safe">Safe</option>
-          <option value="risky">Risky</option>
-        </select>
-      </label><button type="submit">Play</button></form>`;
-    case 'coinflip':
-      return `${common}<label>Pick side
-        <select name="choice">
-          <option value="heads">Heads</option>
-          <option value="tails">Tails</option>
-        </select>
-      </label><button type="submit">Play</button></form>`;
-    case 'dice':
-      return `${common}<label>Bet on
-        <select name="choice">
-          <option value="high">High (4-6)</option>
-          <option value="low">Low (1-3)</option>
-        </select>
-      </label><button type="submit">Play</button></form>`;
-    case 'roulette':
-      return `${common}<label>Color
-        <select name="choice">
-          <option value="red">Red</option>
-          <option value="black">Black</option>
-          <option value="green">Green</option>
-        </select>
-      </label><button type="submit">Play</button></form>`;
-    case 'crash':
-      return `${common}<label>Multiplier target
-        <select name="choice">
-          <option value="1.5">1.5x</option>
-          <option value="2.0">2.0x</option>
-          <option value="3.0">3.0x</option>
-        </select>
-      </label><button type="submit">Play</button></form>`;
-    case 'plinko':
-      return `${common}<label>Drop path
-        <select name="choice">
-          <option value="left">Left</option>
-          <option value="right">Right</option>
-        </select>
-      </label><button type="submit">Play</button></form>`;
-    default:
-      return `${common}<button type="submit">Play</button></form>`;
-  }
+  `);
+  RCUtil.on('closeModalBtn', 'click', closeModal);
+  RCUtil.onSubmit('gameForm', () => playGame(gameKey, RCUtil.formValues('gameForm')));
 }
 
 function renderPromoList() {
-  const container = document.getElementById('promoList');
-  if (!container) return;
-  container.innerHTML = state.promos.map((promo) => `
+  RCUtil.renderList('promoList', state.promos, (promo) => `
     <div class="promo-card">
       <strong>${promo.title}</strong>
       <p>${promo.value}</p>
       <span>${promo.text}</span>
     </div>
-  `).join('');
+  `);
 }
 
 function renderLiveWins() {
-  const container = document.getElementById('liveWinsList');
-  if (!container) return;
-  container.innerHTML = state.liveWins.map((item) => `
-    <li><strong>${item.player}</strong> won ${formatMoney(item.amount)} in ${item.game} • ${item.time}</li>
-  `).join('');
+  RCUtil.renderList('liveWinsList', state.liveWins, (item) => `
+    <li><strong>${item.player}</strong> won ${RCUtil.formatMoney(item.amount)} in ${item.game} • ${item.time}</li>
+  `);
 }
 
 function renderWallet() {
-  const balance = document.getElementById('walletBalance');
-  if (balance) balance.textContent = formatMoney(state.user?.balance || 0);
-  const requests = document.getElementById('walletRequests');
-  if (!requests) return;
-  if (!state.requests.length) {
-    requests.innerHTML = '<p>No pending requests yet.</p>';
-    return;
-  }
-  requests.innerHTML = state.requests.map((req) => `
+  RCUtil.setText('walletBalance', RCUtil.formatMoney(state.user?.balance || 0));
+  RCUtil.renderList('walletRequests', state.requests, (req) => `
     <div class="request-item">
-      <div><strong>${req.type}</strong> • ${formatMoney(req.amount)} • ${req.method || req.address || 'manual'}</div>
+      <div><strong>${req.type}</strong> • ${RCUtil.formatMoney(req.amount)} • ${req.method || req.address || 'manual'}</div>
       <div>${req.status}</div>
     </div>
-  `).join('');
+  `, '<p>No pending requests yet.</p>');
 }
 
 function renderProfile() {
-  const authPanel = document.getElementById('authPanel');
-  const profilePanel = document.getElementById('profilePanel');
-  const settingsPanel = document.getElementById('settingsPanel');
+  const authPanel = RCUtil.byId('authPanel');
+  const profilePanel = RCUtil.byId('profilePanel');
+  const settingsPanel = RCUtil.byId('settingsPanel');
   if (!authPanel || !profilePanel || !settingsPanel) return;
 
   if (!state.user) {
-    authPanel.innerHTML = `
-      <h3>Register / Login</h3>
-      <form id="authForm" class="auth-form">
-        <select id="authMode">
-          <option value="register">Register</option>
-          <option value="login">Login</option>
-        </select>
-        <input id="authIdentifier" placeholder="Email / Telegram / Phone" required />
-        <input id="authPassword" type="password" placeholder="Password" required />
-        <input id="authName" placeholder="First name" />
-        <input id="authSurname" placeholder="Last name" />
-        <input id="authNickname" placeholder="Nickname" />
-        <input id="authCode" placeholder="Verification code" style="display:none;" />
-        <button type="submit">Continue</button>
-      </form>
-      <p class="hint">Registration uses email / telegram / phone and one-time code.</p>
-    `;
-    profilePanel.innerHTML = '<div class="info-card"><h3>Profile</h3><p>Please sign in to access your personal profile.</p></div>';
-    settingsPanel.innerHTML = '<div class="info-card"><h3>Settings</h3><p>Sound and theme will appear once you enter the casino.</p></div>';
-
-    document.getElementById('authForm').addEventListener('submit', (event) => {
-      event.preventDefault();
-      const mode = document.getElementById('authMode').value;
-      const identifier = document.getElementById('authIdentifier').value.trim();
-      const password = document.getElementById('authPassword').value;
-      const name = document.getElementById('authName').value.trim();
-      const surname = document.getElementById('authSurname').value.trim();
-      const nickname = document.getElementById('authNickname').value.trim();
-      const code = document.getElementById('authCode').value.trim();
-
-      if (mode === 'register') {
-        if (state.pendingAuth) {
-          if (code === String(state.pendingAuth.code)) {
-            const existing = state.users.find((u) => u.identifier === identifier);
-            if (existing) {
-              showNotice('This account already exists. Please login.');
-              return;
-            }
-            const user = {
-              id: createId('USR'),
-              identifier,
-              password,
-              name,
-              surname,
-              nickname: nickname || `${name || 'player'}${Math.floor(Math.random() * 90 + 10)}`,
-              balance: 2500,
-              phone: '',
-              email: '',
-              gender: '',
-              birthDate: '',
-              personalId: createId('ID'),
-              avatar: '',
-              banned: false,
-              stats: { wins: 0, losses: 0, totalBet: 0 },
-              role: 'player'
-            };
-            if (identifier.includes('@')) user.email = identifier; else if (identifier.startsWith('+')) user.phone = identifier; else user.email = `${identifier}@telegram.local`;
-            state.users.push(user);
-            state.user = user;
-            state.pendingAuth = null;
-            saveState();
-            render();
-            showNotice('Registration complete. Welcome to Rocket Crown!');
-          } else {
-            showNotice('Wrong verification code.');
-          }
-          return;
-        }
-
-        state.pendingAuth = {
-          identifier,
-          name,
-          surname,
-          nickname,
-          password,
-          code: Math.floor(1000 + Math.random() * 9000)
-        };
-        saveState();
-        document.getElementById('authCode').style.display = 'block';
-        showNotice(`Verification code sent: ${state.pendingAuth.code}`);
-        return;
-      }
-
-      const user = state.users.find((candidate) => candidate.identifier === identifier && candidate.password === password);
-      if (user) {
-        loginUser(user);
-        showNotice('Welcome back.');
-      } else {
-        showNotice('No matching account found.');
-      }
-    });
+    renderAuthForm();
     return;
   }
 
-  authPanel.innerHTML = `
+  RCUtil.renderInto('authPanel', `
     <h3>Signed in</h3>
     <p>${state.user.nickname || state.user.name || state.user.identifier}</p>
     <p>Personal ID: ${state.user.personalId}</p>
     <button id="logoutBtn" class="secondary-btn">Logout</button>
-  `;
-  document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+  `);
+  RCUtil.on('logoutBtn', 'click', logoutUser);
 
-  profilePanel.innerHTML = `
+  RCUtil.renderInto('profilePanel', `
     <h3>Profile</h3>
     <form id="profileForm" class="profile-form">
       <div class="profile-grid">
@@ -529,22 +257,17 @@ function renderProfile() {
       <label>Avatar URL<input id="avatarInput" type="url" value="${state.user.avatar || ''}" /></label>
       <button type="submit">Save profile</button>
     </form>
-  `;
-  document.getElementById('profileForm').addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = new FormData(document.getElementById('profileForm'));
-    const updates = Object.fromEntries(formData.entries());
-    state.user = { ...state.user, ...updates, avatar: document.getElementById('avatarInput').value || state.user.avatar };
-    const idx = state.users.findIndex((u) => u.id === state.user.id);
-    if (idx >= 0) {
-      state.users[idx] = { ...state.users[idx], ...state.user };
-    }
+  `);
+  RCUtil.onSubmit('profileForm', () => {
+    const updates = RCUtil.formValues('profileForm');
+    state.user = { ...state.user, ...updates, avatar: RCUtil.byId('avatarInput').value || state.user.avatar };
+    syncCurrentUser();
     saveState();
     render();
-    showNotice('Profile updated.');
+    RCUtil.showToast('Profile updated.');
   });
 
-  settingsPanel.innerHTML = `
+  RCUtil.renderInto('settingsPanel', `
     <h3>Settings</h3>
     <div class="toggle-row">
       <span>Sound</span>
@@ -555,27 +278,131 @@ function renderProfile() {
       <label class="switch"><input id="themeToggle" type="checkbox" ${state.theme === 'dark' ? 'checked' : ''} /><span></span></label>
     </div>
     <button id="logoutSettingsBtn" class="secondary-btn">Logout</button>
-  `;
-  document.getElementById('soundToggle').addEventListener('change', (event) => {
+  `);
+  RCUtil.on('soundToggle', 'change', (event) => {
     state.sound = event.target.checked;
     saveState();
   });
-  document.getElementById('themeToggle').addEventListener('change', (event) => {
+  RCUtil.on('themeToggle', 'change', (event) => {
     state.theme = event.target.checked ? 'dark' : 'light';
     applyTheme();
     saveState();
   });
-  document.getElementById('logoutSettingsBtn').addEventListener('click', logoutUser);
+  RCUtil.on('logoutSettingsBtn', 'click', logoutUser);
+}
+
+function renderAuthForm() {
+  RCUtil.renderInto('authPanel', `
+    <h3>Register / Login</h3>
+    <form id="authForm" class="auth-form">
+      <select id="authMode">
+        <option value="register">Register</option>
+        <option value="login">Login</option>
+      </select>
+      <input id="authIdentifier" placeholder="Email / Telegram / Phone" required />
+      <input id="authPassword" type="password" placeholder="Password" required />
+      <input id="authName" placeholder="First name" />
+      <input id="authSurname" placeholder="Last name" />
+      <input id="authNickname" placeholder="Nickname" />
+      <input id="authCode" placeholder="Verification code" style="display:none;" />
+      <button type="submit">Continue</button>
+    </form>
+    <p class="hint">Registration uses email / telegram / phone and one-time code.</p>
+  `);
+  RCUtil.renderInto('profilePanel', '<div class="info-card"><h3>Profile</h3><p>Please sign in to access your personal profile.</p></div>');
+  RCUtil.renderInto('settingsPanel', '<div class="info-card"><h3>Settings</h3><p>Sound and theme will appear once you enter the casino.</p></div>');
+
+  RCUtil.onSubmit('authForm', () => {
+    const fields = {
+      mode: RCUtil.byId('authMode').value,
+      identifier: RCUtil.byId('authIdentifier').value.trim(),
+      password: RCUtil.byId('authPassword').value,
+      name: RCUtil.byId('authName').value.trim(),
+      surname: RCUtil.byId('authSurname').value.trim(),
+      nickname: RCUtil.byId('authNickname').value.trim(),
+      code: RCUtil.byId('authCode').value.trim()
+    };
+
+    if (fields.mode === 'register') {
+      handleRegister(fields);
+      return;
+    }
+
+    const user = state.users.find(
+      (candidate) => candidate.identifier === fields.identifier && candidate.password === fields.password
+    );
+    if (user) {
+      loginUser(user);
+      RCUtil.showToast('Welcome back.');
+    } else {
+      RCUtil.showToast('No matching account found.');
+    }
+  });
+}
+
+function handleRegister({ identifier, password, name, surname, nickname, code }) {
+  if (state.pendingAuth) {
+    if (code !== String(state.pendingAuth.code)) {
+      RCUtil.showToast('Wrong verification code.');
+      return;
+    }
+    if (state.users.find((candidate) => candidate.identifier === identifier)) {
+      RCUtil.showToast('This account already exists. Please login.');
+      return;
+    }
+    const user = createUser({ identifier, password, name, surname, nickname });
+    state.users.push(user);
+    state.user = user;
+    state.pendingAuth = null;
+    saveState();
+    render();
+    RCUtil.showToast('Registration complete. Welcome to Rocket Crown!');
+    return;
+  }
+
+  state.pendingAuth = {
+    identifier,
+    name,
+    surname,
+    nickname,
+    password,
+    code: Math.floor(1000 + Math.random() * 9000)
+  };
+  saveState();
+  RCUtil.byId('authCode').style.display = 'block';
+  RCUtil.showToast(`Verification code sent: ${state.pendingAuth.code}`);
+}
+
+function createUser({ identifier, password, name, surname, nickname }) {
+  const user = {
+    id: RCUtil.createId('USR'),
+    identifier,
+    password,
+    name,
+    surname,
+    nickname: nickname || `${name || 'player'}${Math.floor(Math.random() * 90 + 10)}`,
+    balance: 2500,
+    phone: '',
+    email: '',
+    gender: '',
+    birthDate: '',
+    personalId: RCUtil.createId('ID'),
+    avatar: '',
+    banned: false,
+    stats: { wins: 0, losses: 0, totalBet: 0 },
+    role: 'player'
+  };
+  if (identifier.includes('@')) user.email = identifier;
+  else if (identifier.startsWith('+')) user.phone = identifier;
+  else user.email = `${identifier}@telegram.local`;
+  return user;
 }
 
 function renderHome() {
-  const statGames = document.getElementById('statGames');
-  const statUsers = document.getElementById('statUsers');
-  const statDeposits = document.getElementById('statDeposits');
-  if (statGames) statGames.textContent = `Games online: ${Object.values(state.games).filter(Boolean).length}`;
-  if (statUsers) statUsers.textContent = `Active users: ${state.users.length + (state.user ? 1 : 0)}`;
-  if (statDeposits) statDeposits.textContent = state.depositsEnabled ? 'Deposits enabled' : 'Deposits disabled';
-  document.getElementById('claimBonusBtn')?.addEventListener('click', () => showNotice('Bonus activated. Your next deposit gets a 100% boost.'));
+  RCUtil.setText('statGames', `Games online: ${Object.values(state.games).filter(Boolean).length}`);
+  RCUtil.setText('statUsers', `Active users: ${state.users.length + (state.user ? 1 : 0)}`);
+  RCUtil.setText('statDeposits', state.depositsEnabled ? 'Deposits enabled' : 'Deposits disabled');
+  RCUtil.on('claimBonusBtn', 'click', () => RCUtil.showToast('Bonus activated. Your next deposit gets a 100% boost.'));
 }
 
 function render() {
@@ -587,8 +414,7 @@ function render() {
   renderLiveWins();
   renderWallet();
   renderProfile();
-  const balance = document.getElementById('balanceLabel');
-  if (balance) balance.textContent = formatMoney(state.user?.balance || 0);
+  RCUtil.setText('balanceLabel', RCUtil.formatMoney(state.user?.balance || 0));
 }
 
 function bindNavigation() {
@@ -601,54 +427,64 @@ function bindNavigation() {
     });
   }
 
-  document.getElementById('menuLogout')?.addEventListener('click', (event) => {
+  RCUtil.on('menuLogout', 'click', (event) => {
     event.preventDefault();
     logoutUser();
   });
 
   navButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const screenId = `${button.dataset.screen}Screen`;
-      showScreen(screenId);
-    });
+    button.addEventListener('click', () => showScreen(`${button.dataset.screen}Screen`));
   });
 }
 
+function submitRequest({ type, prefix, amount, details }) {
+  state.requests.unshift({
+    id: RCUtil.createId(prefix),
+    type,
+    amount,
+    ...details,
+    status: 'Pending • 5-15 min',
+    createdAt: Date.now()
+  });
+  saveState();
+  renderWallet();
+  RCUtil.showToast(`${type} request created. Processing in 5-15 minutes.`);
+}
+
 function bindWalletForms() {
-  document.getElementById('depositForm')?.addEventListener('submit', (event) => {
-    event.preventDefault();
+  RCUtil.onSubmit('depositForm', () => {
     if (!state.user) {
-      showNotice('Login first to request a deposit.');
+      RCUtil.showToast('Login first to request a deposit.');
       return;
     }
-    const amount = Number(document.getElementById('depositAmount').value);
-    const method = document.getElementById('depositMethod').value;
     if (!state.depositsEnabled) {
-      showNotice('Deposits are disabled for now.');
+      RCUtil.showToast('Deposits are disabled for now.');
       return;
     }
-    state.requests.unshift({ id: createId('DEP'), type: 'Deposit', amount, method, status: 'Pending • 5-15 min', createdAt: Date.now() });
-    saveState();
-    renderWallet();
-    showNotice(`Deposit request created. Processing in 5-15 minutes.`);
+    submitRequest({
+      type: 'Deposit',
+      prefix: 'DEP',
+      amount: Number(RCUtil.byId('depositAmount').value),
+      details: { method: RCUtil.byId('depositMethod').value }
+    });
   });
 
-  document.getElementById('withdrawForm')?.addEventListener('submit', (event) => {
-    event.preventDefault();
+  RCUtil.onSubmit('withdrawForm', () => {
     if (!state.user) {
-      showNotice('Login first to request a withdrawal.');
+      RCUtil.showToast('Login first to request a withdrawal.');
       return;
     }
-    const amount = Number(document.getElementById('withdrawAmount').value);
-    const address = document.getElementById('withdrawAddress').value.trim();
+    const amount = Number(RCUtil.byId('withdrawAmount').value);
     if (amount > (state.user.balance || 0)) {
-      showNotice('Insufficient balance.');
+      RCUtil.showToast('Insufficient balance.');
       return;
     }
-    state.requests.unshift({ id: createId('WD'), type: 'Withdraw', amount, address, status: 'Pending • 5-15 min', createdAt: Date.now() });
-    saveState();
-    renderWallet();
-    showNotice(`Withdraw request created. Processing in 5-15 minutes.`);
+    submitRequest({
+      type: 'Withdraw',
+      prefix: 'WD',
+      amount,
+      details: { address: RCUtil.byId('withdrawAddress').value.trim() }
+    });
   });
 }
 
@@ -658,9 +494,12 @@ function initLiveWinsLoop() {
     const sampleGames = ['Crash', 'Roulette', 'Dice', 'Mines'];
     const samplePlayers = ['Nico', 'Rex', 'Lana', 'Toni', 'Jules'];
     const randomIndex = Math.floor(Math.random() * sampleGames.length);
-    state.liveWins.unshift({ player: samplePlayers[randomIndex], game: sampleGames[randomIndex], amount: 100 + randomInt(1, 400), time: 'just now' });
-    state.liveWins = state.liveWins.slice(0, 8);
-    saveState();
+    pushLiveWin({
+      player: samplePlayers[randomIndex],
+      game: sampleGames[randomIndex],
+      amount: 100 + RCUtil.randomInt(1, 400),
+      time: 'just now'
+    });
     renderLiveWins();
   }, 6000);
 }
