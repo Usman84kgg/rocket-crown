@@ -1,0 +1,5 @@
+node_modules/
+coverage/
+.pytest_cache/
+.coverage
+__pycache__/
