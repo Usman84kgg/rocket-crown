@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rocket Crown — Admin Panel</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell admin-shell">
+    <header class="top-bar">
+      <div class="brand-block">
+        <div class="brand-title">ROCKET</div>
+        <div class="brand-subtitle">ADMIN</div>
+      </div>
+      <div class="top-actions">
+        <a class="secondary-link" href="../">Back to casino</a>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="info-card" id="loginCard">
+        <h3>Owner access</h3>
+        <form id="adminLoginForm" class="action-form">
+          <input type="password" id="adminPasswordInput" placeholder="Admin password" required />
+          <button type="submit">Enter</button>
+        </form>
+        <p class="hint">Only the casino owner should use this page.</p>
+      </section>
+
+      <div id="adminBody" hidden>
+        <div class="quick-stats">
+          <div class="stat-pill" id="statPending">Pending: 0</div>
+          <div class="stat-pill" id="statPlayers">Players: 0</div>
+          <div class="stat-pill" id="statBalance">Total: $0.00</div>
+        </div>
+
+        <div class="info-card">
+          <div class="section-title-row">
+            <h2>Payment requests</h2>
+            <span id="requestFilterLabel">Pending first</span>
+          </div>
+          <div id="requestsList"></div>
+        </div>
+
+        <div class="info-card">
+          <div class="section-title-row">
+            <h2>Players</h2>
+          </div>
+          <div id="playersList"></div>
+        </div>
+
+        <div class="info-card">
+          <div class="section-title-row">
+            <h2>Casino controls</h2>
+          </div>
+          <div class="toggle-row">
+            <span>Deposits enabled</span>
+            <label class="switch"><input id="depositsToggle" type="checkbox" /><span></span></label>
+          </div>
+          <div id="gameToggles"></div>
+        </div>
+
+        <div class="info-card">
+          <div class="section-title-row">
+            <h2>Owner password</h2>
+          </div>
+          <form id="passwordForm" class="action-form">
+            <input type="password" id="newPassword" placeholder="New admin password" minlength="6" required />
+            <button type="submit">Update password</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
