@@ -118,6 +118,19 @@ function createId(prefix) {
   return `${prefix}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 }
 
+function createRequest(prefix, type, amount, extra) {
+  return {
+    id: createId(prefix),
+    type,
+    amount,
+    status: 'Pending',
+    userId: state.user?.id || null,
+    userLabel: state.user?.nickname || state.user?.identifier || 'Player',
+    createdAt: Date.now(),
+    ...extra
+  };
+}
+
 function addLiveWin(game, amount, player = 'Player') {
   state.liveWins.unshift({ player, game, amount, time: 'just now' });
   state.liveWins = state.liveWins.slice(0, 8);
@@ -147,10 +160,6 @@ function playGame(gameName, payload) {
     showNotice('This game is under maintenance.');
     return;
   }
-  if (!state.depositsEnabled) {
-    showNotice('Deposits are temporarily disabled.');
-    return;
-  }
   const amount = Number(payload.amount);
   if (!Number.isFinite(amount) || amount <= 0 || amount > (state.user.balance || 0)) {
     showNotice('Insufficient balance or invalid stake.');
@@ -167,7 +176,7 @@ function playGame(gameName, payload) {
   }
 
   const stats = getUserStats(state.user);
-  const net = result.won ? amount + result.payout : -amount;
+  const net = result.won ? result.payout - amount : -amount;
   state.user.balance = Number(state.user.balance) + net;
   stats.wins += result.won ? 1 : 0;
   stats.losses += result.won ? 0 : 1;
@@ -180,7 +189,7 @@ function playGame(gameName, payload) {
   }
 
   if (result.won) {
-    addLiveWin(gameName.toUpperCase(), result.payout + amount, state.user.nickname || state.user.name || 'Player');
+    addLiveWin(gameName.toUpperCase(), result.payout, state.user.nickname || state.user.name || 'Player');
   }
   saveState();
   showNotice(result.message + ` Balance ${formatMoney(state.user.balance)}`);
@@ -245,11 +254,22 @@ function resolveRound(gameName, payload, amount) {
   return result;
 }
 
+function toastStack() {
+  let stack = document.getElementById('toastStack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.id = 'toastStack';
+    stack.className = 'toast-stack';
+    document.body.appendChild(stack);
+  }
+  return stack;
+}
+
 function showNotice(message) {
   const notice = document.createElement('div');
   notice.className = 'toast';
   notice.textContent = message;
-  document.body.appendChild(notice);
+  toastStack().appendChild(notice);
   setTimeout(() => notice.remove(), 2600);
 }
 
@@ -684,10 +704,10 @@ function bindWalletForms() {
       showNotice('Enter a valid deposit amount.');
       return;
     }
-    state.requests.unshift({ id: createId('DEP'), type: 'Deposit', amount, method, status: 'Pending • 5-15 min', createdAt: Date.now() });
+    state.requests.unshift(createRequest('DEP', 'Deposit', amount, { method }));
     saveState();
     renderWallet();
-    showNotice(`Deposit request created. Processing in 5-15 minutes.`);
+    showNotice('Deposit request created. It will be confirmed manually.');
   });
 
   document.getElementById('withdrawForm')?.addEventListener('submit', (event) => {
@@ -710,10 +730,11 @@ function bindWalletForms() {
       showNotice('Insufficient balance.');
       return;
     }
-    state.requests.unshift({ id: createId('WD'), type: 'Withdraw', amount, address, status: 'Pending • 5-15 min', createdAt: Date.now() });
+    updateUserBalance(-amount);
+    state.requests.unshift(createRequest('WD', 'Withdraw', amount, { address }));
     saveState();
-    renderWallet();
-    showNotice(`Withdraw request created. Processing in 5-15 minutes.`);
+    render();
+    showNotice('Withdraw request created. Funds are on hold until it is confirmed.');
   });
 }
 
@@ -746,9 +767,21 @@ window.addEventListener('unhandledrejection', (event) => {
   console.error('Unhandled promise rejection', event.reason);
 });
 
+function initStateSync() {
+  window.addEventListener('storage', (event) => {
+    if (event.key !== STORAGE_KEY) return;
+    state = loadState();
+    if (state.user) {
+      state.user = state.users.find((user) => user.id === state.user.id) || state.user;
+    }
+    render();
+  });
+}
+
 try {
   bindNavigation();
   bindWalletForms();
+  initStateSync();
   applyTheme();
   render();
   initLiveWinsLoop();
