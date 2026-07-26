@@ -1,11 +1,8 @@
-// =====================
-// ROCKET CROWN
-// =====================
-
-
+// ======================
 // LOADING SCREEN
+// ======================
 
-setTimeout(() => {
+setTimeout(function () {
 
 document.getElementById("loading-screen").style.display = "none";
 document.getElementById("main-app").style.display = "block";
@@ -13,210 +10,89 @@ document.getElementById("main-app").style.display = "block";
 },2000);
 
 
-// =====================
+// ======================
 // USER DATA
-// =====================
+// ======================
 
 let userLevel = 1;
-
-
-// ОБЩИЙ БАЛАНС В ДОЛЛАРАХ
 
 let totalBalanceUSD = 0.00;
 
 
-// =====================
-// АКТИВЫ ПОЛЬЗОВАТЕЛЯ
-// =====================
-
-const walletAssets = {
-
-USDT : 0,
-BTC : 0,
-ETH : 0,
-TON : 0,
-TRX : 0,
-SOL : 0,
-BNB : 0,
-DOGE : 0,
-XRP : 0,
-LTC : 0
-
-};
-
-
-// =====================
-// КУРСЫ КРИПТЫ
-// =====================
-
-const cryptoPrices = {
-
-USDT : 1,
-BTC : 0,
-ETH : 0,
-TON : 0,
-TRX : 0,
-SOL : 0,
-BNB : 0,
-DOGE : 0,
-XRP : 0,
-LTC : 0
-
-};
-
-
-// =====================
+// ======================
 // ОБНОВЛЕНИЕ БАЛАНСА
-// =====================
+// ======================
 
-function updateBalance() {
+function updateBalance(){
 
-const balanceElement = document.querySelector(".balance");
+const balanceElement = document.querySelector(".top-balance");
 
 if(balanceElement){
 
-balanceElement.innerHTML = "$" + totalBalanceUSD.toFixed(2);
+balanceElement.innerHTML =
+"$" + totalBalanceUSD.toFixed(2);
 
 }
 
 }
 
 
-// =====================
-// ОБНОВЛЕНИЕ VIP LEVEL
-// =====================
+// ======================
+// ОБНОВЛЕНИЕ VIP
+// ======================
 
-function updateLevel() {
+function updateLevel(){
 
-const levelElement = document.querySelector(".level");
+const levelElement = document.querySelector(".top-level");
 
 if(levelElement){
 
-levelElement.innerHTML = "LVL " + userLevel;
+levelElement.innerHTML =
+"LVL " + userLevel;
 
 }
 
 }
 
 
-// =====================
-// ПОЛУЧЕНИЕ КУРСОВ КРИПТЫ
-// =====================
+// ======================
+// КУРСЫ КРИПТЫ
+// ======================
 
-
-// СЮДА ПОЗЖЕ ПОДКЛЮЧИМ API BINANCE
-// ИЛИ COINGECKO
-
+// ПОЗЖЕ ПОДКЛЮЧИМ COINGECKO API
 
 function updateCryptoPrices(){
 
-console.log("Crypto API Ready.");
+console.log("Crypto Prices Ready.");
 
 }
 
 
-// =====================
-// ДЕПОЗИТЫ
-// =====================
+// ======================
+// ДЕПОЗИТ
+// ======================
 
 function depositCrypto(){
 
-console.log("Deposit System Ready.");
+console.log("Deposit Ready.");
 
 }
 
 
-// =====================
-// ВЫВОД СРЕДСТВ
-// =====================
+// ======================
+// ВЫВОД
+// ======================
 
 function withdrawCrypto(){
 
-console.log("Withdraw System Ready.");
+console.log("Withdraw Ready.");
 
 }
 
 
-// =====================
-// ИСТОРИЯ ТРАНЗАКЦИЙ
-// =====================
-
-function transactionHistory(){
-
-console.log("History Ready.");
-
-}
-
-
-// =====================
-// TELEGRAM WALLET
-// =====================
-
-function connectTelegramWallet(){
-
-console.log("Telegram Wallet Ready.");
-
-}
-
-
-// =====================
-// TON CONNECT
-// =====================
-
-function connectTONConnect(){
-
-console.log("TON Connect Ready.");
-
-}
-
-
-// =====================
-// VIP SYSTEM
-// =====================
-
-function updateVIP(){
-
-console.log("VIP System Ready.");
-
-}
-
-
-// =====================
-// CASHBACK SYSTEM
-// =====================
-
-function updateCashback(){
-
-console.log("Cashback System Ready.");
-
-}
-
-
-// =====================
-// PROMO SYSTEM
-// =====================
-
-function activatePromoCode(){
-
-console.log("Promo System Ready.");
-
-}
-
-
-// =====================
-// LIVE WINS
-// =====================
-
-function updateLiveWins(){
-
-console.log("Live Wins Ready.");
-
-}
-
-
-// =====================
-// JACKPOT SYSTEM
-// =====================
+// ======================
+// JACKPOT
+// ======================
 
 function updateJackpot(){
 
@@ -225,9 +101,86 @@ console.log("Jackpot Ready.");
 }
 
 
-// =====================
-// START
-// =====================
+// ======================
+// LIVE WINS
+// ======================
+
+function updateLiveWins(){
+
+console.log("Live Wins Ready.");
+
+}
+
+
+// ======================
+// CASHBACK
+// ======================
+
+function updateCashback(){
+
+console.log("Cashback Ready.");
+
+}
+
+
+// ======================
+// PROMO CODES
+// ======================
+
+function activatePromoCode(){
+
+console.log("Promo Ready.");
+
+}
+
+
+// ======================
+// TELEGRAM WALLET
+// ======================
+
+function connectTelegramWallet(){
+
+console.log("Telegram Wallet Ready.");
+
+}
+
+
+// ======================
+// TON CONNECT
+// ======================
+
+function connectTONConnect(){
+
+console.log("TON Connect Ready.");
+
+}
+
+
+// ======================
+// VIP SYSTEM
+// ======================
+
+function updateVIP(){
+
+console.log("VIP Ready.");
+
+}
+
+
+// ======================
+// REFERRAL SYSTEM
+// ======================
+
+function updateReferral(){
+
+console.log("Referral Ready.");
+
+}
+
+
+// ======================
+// START APP
+// ======================
 
 updateBalance();
 updateLevel();
