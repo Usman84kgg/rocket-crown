@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rocket Crown</title>
+  <title>Rocket Crown Casino</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -14,7 +14,7 @@
         <div class="brand-subtitle">CROWN</div>
       </div>
       <div class="top-actions">
-        <div class="balance-pill">$0.00</div>
+        <div id="balanceLabel" class="balance-pill">$0.00</div>
         <button class="menu-button" id="menuButton" aria-label="Открыть меню">
           <span></span><span></span><span></span>
         </button>
@@ -22,8 +22,8 @@
     </header>
 
     <div class="menu-panel" id="menuPanel">
-      <a href="#">Support 24/7</a>
-      <a href="#">Change Language</a>
+      <a href="admin/">Admin Panel</a>
+      <a href="#" id="menuLogout">Logout</a>
       <a href="mailto:support@rocketcrown.com">Email</a>
       <a href="#">Referral Program</a>
     </div>
@@ -33,77 +33,72 @@
         <div class="hero-card">
           <p class="eyebrow">WELCOME BONUS</p>
           <h1>200% + 250 FREE SPINS</h1>
-          <button>Claim Bonus</button>
+          <button id="claimBonusBtn">Claim Bonus</button>
+        </div>
+
+        <div class="quick-stats">
+          <div class="stat-pill" id="statGames">Games online</div>
+          <div class="stat-pill" id="statUsers">Active users</div>
+          <div class="stat-pill" id="statDeposits">Deposits enabled</div>
         </div>
 
         <div class="section-title-row">
           <h2>Popular Games</h2>
-          <span>Swipe</span>
+          <span>Tap to play</span>
         </div>
+        <div id="gamesCarousel" class="games-carousel"></div>
 
-        <div class="games-carousel">
-          <div class="game-card"><div class="icon" style="background-image:url('assets/games/mines.png')"></div><p>Mines</p></div>
-          <div class="game-card"><div class="icon" style="background-image:url('assets/games/crash.png')"></div><p>Crash</p></div>
-          <div class="game-card"><div class="icon" style="background-image:url('assets/games/dice.png')"></div><p>Dice</p></div>
-          <div class="game-card"><div class="icon" style="background-image:url('assets/games/roulette.png')"></div><p>Roulette</p></div>
-          <div class="game-card"><div class="icon" style="background-image:url('assets/games/coinflip.png')"></div><p>Coinflip</p></div>
-          <div class="game-card"><div class="icon" style="background-image:url('assets/games/mines.png')"></div><p>Plinko</p></div>
+        <div class="section-title-row">
+          <h2>Active Promotions</h2>
         </div>
+        <div id="promoList" class="promo-list"></div>
 
-        <div class="info-card">
-          <h3>Live Wins</h3>
-          <p>@Player + $257</p>
-          <p>@Rocket + $1189</p>
+        <div class="section-title-row">
+          <h2>Live Wins</h2>
         </div>
+        <ul id="liveWinsList" class="live-wins-list"></ul>
       </section>
 
       <section class="screen" id="casinoScreen">
         <div class="section-title-row">
           <h2>Casino</h2>
-          <span>Hot games</span>
+          <span>Fair random results</span>
         </div>
-
-        <div class="casino-stack">
-          <div class="casino-row">
-            <div class="casino-card">Mines</div>
-            <div class="casino-card">Crash</div>
-          </div>
-          <div class="casino-row">
-            <div class="casino-card">Roulette</div>
-            <div class="casino-card">Blackjack</div>
-          </div>
-          <div class="casino-row">
-            <div class="casino-card">Plinko</div>
-            <div class="casino-card">Coinflip</div>
-          </div>
-        </div>
+        <div id="casinoGrid" class="casino-stack"></div>
       </section>
 
       <section class="screen" id="walletScreen">
         <div class="wallet-card">
           <p class="eyebrow">Wallet</p>
-          <h1>$12,450.00</h1>
+          <h1 id="walletBalance">$0.00</h1>
           <div class="wallet-actions">
-            <button>Deposit</button>
-            <button>Withdraw</button>
+            <form id="depositForm" class="action-form">
+              <input type="number" id="depositAmount" min="10" step="10" placeholder="Deposit amount" required />
+              <select id="depositMethod">
+                <option value="TON">TON</option>
+                <option value="USDT">USDT</option>
+                <option value="SOL">SOL</option>
+              </select>
+              <button type="submit">Request Deposit</button>
+            </form>
+            <form id="withdrawForm" class="action-form">
+              <input type="number" id="withdrawAmount" min="10" step="10" placeholder="Withdraw amount" required />
+              <input type="text" id="withdrawAddress" placeholder="TON / USDT address" required />
+              <button type="submit">Request Withdraw</button>
+            </form>
           </div>
         </div>
 
         <div class="info-card">
-          <h3>Recent Activity</h3>
-          <p>Deposit • Completed</p>
-          <p>Withdrawal • In progress</p>
-          <p>Bonus • Activated</p>
+          <h3>Pending requests</h3>
+          <div id="walletRequests"></div>
         </div>
       </section>
 
       <section class="screen" id="profileScreen">
-        <div class="profile-card">
-          <div class="avatar">👑</div>
-          <h2>Player Profile</h2>
-          <p>Level 1 • VIP Bronze</p>
-          <p>Verified • Fast payouts</p>
-        </div>
+        <div id="authPanel" class="profile-card"></div>
+        <div id="profilePanel" class="profile-card"></div>
+        <div id="settingsPanel" class="profile-card"></div>
       </section>
     </main>
 
@@ -114,6 +109,8 @@
       <button class="nav-btn" data-screen="profile">Profile</button>
     </nav>
   </div>
+
+  <div class="modal" id="gameModal" hidden></div>
 
   <script src="script.js"></script>
 </body>
