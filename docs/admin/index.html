@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-ancestors https://web.telegram.org" />
   <title>Rocket Crown — Admin Panel</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="style.css" />
@@ -23,10 +24,10 @@
       <section class="info-card" id="loginCard">
         <h3>Owner access</h3>
         <form id="adminLoginForm" class="action-form">
-          <input type="password" id="adminPasswordInput" placeholder="Admin password" required />
+          <input type="password" id="adminPasswordInput" placeholder="Admin password" minlength="8" required />
           <button type="submit">Enter</button>
         </form>
-        <p class="hint">Only the casino owner should use this page.</p>
+        <p class="hint">Only the casino owner should use this page. On first use in this browser the password you enter becomes the admin password.</p>
       </section>
 
       <div id="adminBody" hidden>
@@ -67,7 +68,7 @@
             <h2>Owner password</h2>
           </div>
           <form id="passwordForm" class="action-form">
-            <input type="password" id="newPassword" placeholder="New admin password" minlength="6" required />
+            <input type="password" id="newPassword" placeholder="New admin password" minlength="8" required />
             <button type="submit">Update password</button>
           </form>
         </div>

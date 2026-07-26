@@ -1,5 +1,5 @@
 const STORAGE_KEY = 'rocket-crown-state-v1';
-const DEFAULT_ADMIN_PASSWORD = 'admin2026';
+const MIN_PASSWORD_LENGTH = 8;
 const GAME_KEYS = ['mines', 'crash', 'dice', 'roulette', 'coinflip', 'plinko'];
 
 const loginCard = document.getElementById('loginCard');
@@ -24,6 +24,25 @@ function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);
+}
+
+function randomHex(bytes) {
+  const array = new Uint8Array(bytes);
+  crypto.getRandomValues(array);
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function hashPassword(password, salt) {
+  const data = new TextEncoder().encode(`${salt}:${password}`);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function setAdminPassword(password) {
+  state.adminPasswordSalt = randomHex(16);
+  state.adminPasswordHash = await hashPassword(password, state.adminPasswordSalt);
+  delete state.adminPassword;
+  saveState();
 }
 
 function formatMoney(value) {
@@ -213,27 +232,37 @@ function render() {
   renderControls();
 }
 
-document.getElementById('adminLoginForm').addEventListener('submit', (event) => {
+document.getElementById('adminLoginForm').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const entered = document.getElementById('adminPasswordInput').value;
-  if (entered !== (state.adminPassword || DEFAULT_ADMIN_PASSWORD)) {
+  const input = document.getElementById('adminPasswordInput');
+  const entered = input.value;
+
+  if (!state.adminPasswordHash) {
+    if (entered.length < MIN_PASSWORD_LENGTH) {
+      window.alert(`Choose an admin password of at least ${MIN_PASSWORD_LENGTH} characters.`);
+      return;
+    }
+    await setAdminPassword(entered);
+    window.alert('Admin password created for this browser.');
+  } else if ((await hashPassword(entered, state.adminPasswordSalt)) !== state.adminPasswordHash) {
     window.alert('Wrong admin password.');
     return;
   }
+
+  input.value = '';
   loginCard.hidden = true;
   adminBody.hidden = false;
   render();
 });
 
-document.getElementById('passwordForm').addEventListener('submit', (event) => {
+document.getElementById('passwordForm').addEventListener('submit', async (event) => {
   event.preventDefault();
   const next = document.getElementById('newPassword').value;
-  if (next.length < 6) {
-    window.alert('Password must be at least 6 characters.');
+  if (next.length < MIN_PASSWORD_LENGTH) {
+    window.alert(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
     return;
   }
-  state.adminPassword = next;
-  saveState();
+  await setAdminPassword(next);
   document.getElementById('newPassword').value = '';
   window.alert('Admin password updated.');
 });
