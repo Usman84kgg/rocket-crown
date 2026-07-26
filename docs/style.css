@@ -195,17 +195,41 @@ button {
 }
 
 .game-card .icon {
-  width: 62px;
-  height: 62px;
-  border-radius: 18px;
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
   background-size: cover;
   background-position: center;
-  border: 1px solid rgba(251, 191, 36, 0.25);
-  margin-bottom: 8px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+  margin-bottom: 0;
+  overflow: hidden;
 }
 
-.game-card p { margin: 0; font-weight: 700; }
+.game-card {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+}
+
+.game-card p {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  margin: 0;
+  font-weight: 700;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.75);
+  z-index: 2;
+}
+
+.game-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.7) 100%);
+  border-radius: 22px;
+  pointer-events: none;
+}
 
 .info-card p {
   margin: 8px 0;
