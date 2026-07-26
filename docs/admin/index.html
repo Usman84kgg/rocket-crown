@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rocket Crown — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -15,47 +18,50 @@
         <div class="brand-subtitle">ADMIN</div>
       </div>
       <div class="top-actions">
-        <a class="secondary-link" href="../">Back to casino</a>
+        <a class="secondary-btn" href="../" style="font-size:13px;padding:8px 14px;">← Casino</a>
       </div>
     </header>
 
-    <main class="content">
+    <main class="content" style="padding-top:6px;">
+
+      <!-- LOGIN -->
       <section class="info-card" id="loginCard">
-        <h3>Owner access</h3>
+        <h3 style="font-family:Rajdhani,sans-serif;margin-bottom:14px;">👑 Owner Access</h3>
         <form id="adminLoginForm" class="action-form">
-          <input type="email" id="adminEmail" placeholder="Owner email" autocomplete="email" required />
-          <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password" required />
-          <button type="submit">Enter</button>
+          <input type="email"    id="adminEmail"    placeholder="Owner email"    autocomplete="email"            required />
+          <input type="password" id="adminPassword" placeholder="Password"       autocomplete="current-password" required />
+          <button type="submit">Enter Admin Panel</button>
         </form>
-        <p class="hint" id="loginHint">Sign in with the casino account marked as owner.</p>
+        <p class="hint" id="loginHint" style="margin-top:10px;">Sign in with the account marked as owner.</p>
       </section>
 
+      <!-- ADMIN BODY -->
       <div id="adminBody" hidden>
+
+        <!-- Stats -->
         <div class="quick-stats">
           <div class="stat-pill" id="statPending">Pending: 0</div>
           <div class="stat-pill" id="statPlayers">Players: 0</div>
-          <div class="stat-pill" id="statBalance">Total: $0.00</div>
+          <div class="stat-pill" id="statBalance">Total: $0</div>
         </div>
 
+        <!-- Payment requests -->
         <div class="info-card">
           <div class="section-title-row">
-            <h2>Payment requests</h2>
-            <span id="requestFilterLabel">Pending first</span>
+            <h2>💸 Payment Requests</h2>
           </div>
           <div id="requestsList"></div>
         </div>
 
+        <!-- Players -->
         <div class="info-card">
-          <div class="section-title-row">
-            <h2>Players</h2>
-          </div>
+          <div class="section-title-row"><h2>👥 Players</h2></div>
           <div id="playersList"></div>
         </div>
 
+        <!-- Casino controls -->
         <div class="info-card">
-          <div class="section-title-row">
-            <h2>Casino controls</h2>
-          </div>
+          <div class="section-title-row"><h2>🎮 Casino Controls</h2></div>
           <div class="toggle-row">
             <span>Deposits enabled</span>
             <label class="switch"><input id="depositsToggle" type="checkbox" /><span></span></label>
@@ -63,12 +69,40 @@
           <div id="gameToggles"></div>
         </div>
 
+        <!-- Deposit Addresses -->
         <div class="info-card">
-          <div class="section-title-row">
-            <h2>Session</h2>
-          </div>
-          <button id="adminLogout" class="btn-neutral">Log out</button>
+          <div class="section-title-row"><h2>💳 Deposit Addresses</h2></div>
+          <p class="hint" style="margin-bottom:14px;">Users will see these addresses on the Wallet screen.</p>
+          <form id="depositAddressForm" class="action-form">
+            <label style="font-size:13px;color:var(--muted);">TON Address</label>
+            <input type="text" id="addrTON"  placeholder="EQ…" />
+            <label style="font-size:13px;color:var(--muted);">USDT (TRC-20) Address</label>
+            <input type="text" id="addrUSDT" placeholder="T…" />
+            <label style="font-size:13px;color:var(--muted);">BTC Address</label>
+            <input type="text" id="addrBTC"  placeholder="bc1…" />
+            <button type="submit">Save Addresses</button>
+          </form>
         </div>
+
+        <!-- Contact Info -->
+        <div class="info-card">
+          <div class="section-title-row"><h2>📬 Contact Info</h2></div>
+          <p class="hint" style="margin-bottom:14px;">Shown to players in the casino menu.</p>
+          <form id="contactForm" class="action-form">
+            <label style="font-size:13px;color:var(--muted);">Support Email</label>
+            <input type="email" id="contactEmail"    placeholder="support@yourdomain.com" />
+            <label style="font-size:13px;color:var(--muted);">Telegram (Support bot or username)</label>
+            <input type="text"  id="contactTelegram" placeholder="@support_bot" />
+            <button type="submit">Save Contact Info</button>
+          </form>
+        </div>
+
+        <!-- Session -->
+        <div class="info-card">
+          <div class="section-title-row"><h2>🔐 Session</h2></div>
+          <button id="adminLogout" class="secondary-btn">Log Out</button>
+        </div>
+
       </div>
     </main>
   </div>

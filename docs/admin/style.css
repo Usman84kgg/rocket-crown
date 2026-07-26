@@ -1,17 +1,21 @@
 .admin-shell { padding-bottom: 32px; }
-.secondary-link { color: var(--accent); text-decoration: none; font-weight: 700; font-size: 13px; }
-.admin-row { display: grid; gap: 8px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.14); }
+
+.admin-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px; padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
 .admin-row:last-child { border-bottom: none; }
-.admin-row__head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-.admin-row__title { font-weight: 700; }
-.admin-row__meta { font-size: 12px; opacity: 0.85; word-break: break-all; }
-.admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.admin-actions button { border: none; border-radius: 999px; padding: 9px 14px; font-weight: 700; color: #111827; }
-.btn-approve { background: linear-gradient(135deg, #34d399, #059669); }
-.btn-reject { background: linear-gradient(135deg, #fca5a5, #b91c1c); color: #fff; }
-.btn-neutral { background: rgba(255,255,255,0.16); color: #fff; }
-.badge { border-radius: 999px; padding: 3px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-.badge-pending { background: rgba(251, 191, 36, 0.24); color: #fde68a; }
-.badge-approved { background: rgba(52, 211, 153, 0.22); color: #6ee7b7; }
-.badge-rejected { background: rgba(248, 113, 113, 0.22); color: #fca5a5; }
-.empty-note { opacity: 0.8; font-size: 14px; margin: 6px 0; }
+.admin-row > div:first-child { flex: 1; min-width: 0; }
+
+.muted { font-size: 12px; color: var(--muted); margin-top: 3px; word-break: break-all; }
+
+.admin-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.admin-actions button {
+  border: none; border-radius: 999px; padding: 8px 14px;
+  font-weight: 700; font-size: 13px;
+  font-family: 'Rajdhani', sans-serif; cursor: pointer;
+}
+.btn-approve { background: linear-gradient(135deg, #34d399, #059669); color: #fff; }
+.btn-reject  { background: linear-gradient(135deg, #f87171, #b91c1c); color: #fff; }
+.btn-neutral { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.15) !important; }

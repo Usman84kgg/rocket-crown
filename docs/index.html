@@ -4,10 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rocket Crown Casino</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-shell">
+
+    <!-- TOP BAR -->
     <header class="top-bar">
       <div class="brand-block">
         <div class="brand-title">ROCKET</div>
@@ -15,101 +20,151 @@
       </div>
       <div class="top-actions">
         <div id="balanceLabel" class="balance-pill">$0.00</div>
-        <button class="menu-button" id="menuButton" aria-label="Открыть меню">
+        <button class="menu-button" id="menuButton" aria-label="Menu">
           <span></span><span></span><span></span>
         </button>
       </div>
     </header>
 
+    <!-- MENU PANEL -->
     <div class="menu-panel" id="menuPanel">
-      <a href="admin/">Admin Panel</a>
-      <a href="#" id="menuLogout">Logout</a>
-      <a href="mailto:support@rocketcrown.com">Email</a>
-      <a href="#">Referral Program</a>
+      <div class="menu-section-title">Navigation</div>
+
+      <a class="menu-item" id="menuLoginBtn">
+        <span class="menu-icon">👤</span>
+        <span id="menuAuthLabel">Login / Register</span>
+      </a>
+
+      <a class="menu-item" href="admin/" id="menuAdminLink" style="display:none;">
+        <span class="menu-icon">⚙️</span>
+        Admin Panel
+      </a>
+
+      <div class="menu-divider"></div>
+      <div class="menu-section-title">Support</div>
+
+      <a class="menu-item" id="menuSupportBtn">
+        <span class="menu-icon">💬</span>
+        Support 24/7
+        <span class="menu-badge">24/7</span>
+      </a>
+
+      <div class="menu-divider"></div>
+      <div class="menu-section-title">Legal</div>
+
+      <a class="menu-item" href="#">
+        <span class="menu-icon">📄</span>
+        Terms & Conditions
+      </a>
+
+      <a class="menu-item" href="#">
+        <span class="menu-icon">🔒</span>
+        Privacy Policy
+      </a>
+
+      <div class="menu-divider"></div>
+      <div class="menu-contact" id="menuContact">
+        <a href="mailto:support@rocketcrown.com" id="menuContactEmail">support@rocketcrown.com</a>
+      </div>
     </div>
 
+    <!-- CONTENT -->
     <main class="content">
+
+      <!-- HOME SCREEN -->
       <section class="screen active" id="homeScreen">
+
         <div class="hero-card">
-          <p class="eyebrow">WELCOME BONUS</p>
+          <p class="eyebrow">Welcome Bonus</p>
           <h1>200% + 250 FREE SPINS</h1>
           <button id="claimBonusBtn">Claim Bonus</button>
         </div>
 
         <div class="quick-stats">
-          <div class="stat-pill" id="statGames">Games online</div>
-          <div class="stat-pill" id="statUsers">Active users</div>
-          <div class="stat-pill" id="statDeposits">Deposits enabled</div>
+          <div class="stat-pill" id="statGames">6 Games</div>
+          <div class="stat-pill" id="statUsers">Sign in to play</div>
+          <div class="stat-pill" id="statDeposits">Deposits ✓</div>
         </div>
 
         <div class="section-title-row">
-          <h2>Popular Games</h2>
+          <h2>🔥 Hot Games</h2>
           <span>Tap to play</span>
         </div>
         <div id="gamesCarousel" class="games-carousel"></div>
 
         <div class="section-title-row">
-          <h2>Active Promotions</h2>
+          <h2>🎁 Promotions</h2>
         </div>
         <div id="promoList" class="promo-list"></div>
 
         <div class="section-title-row">
-          <h2>Live Wins</h2>
+          <h2>⚡ Live Wins</h2>
         </div>
         <ul id="liveWinsList" class="live-wins-list"></ul>
+
       </section>
 
+      <!-- CASINO SCREEN -->
       <section class="screen" id="casinoScreen">
         <div class="section-title-row">
-          <h2>Casino</h2>
-          <span>Fair random results</span>
+          <h2>🎰 All Games</h2>
+          <span>Fair & Provably Random</span>
         </div>
         <div id="casinoGrid" class="casino-stack"></div>
       </section>
 
+      <!-- WALLET SCREEN -->
       <section class="screen" id="walletScreen">
         <div class="wallet-card">
-          <p class="eyebrow">Wallet</p>
+          <p class="eyebrow">Your Balance</p>
           <h1 id="walletBalance">$0.00</h1>
           <div class="wallet-actions">
             <form id="depositForm" class="action-form">
-              <input type="number" id="depositAmount" min="10" step="10" placeholder="Deposit amount" required />
+              <input type="number" id="depositAmount" min="5" step="1" placeholder="Deposit amount ($)" required />
               <select id="depositMethod">
                 <option value="TON">TON</option>
-                <option value="USDT">USDT</option>
-                <option value="SOL">SOL</option>
+                <option value="USDT">USDT (TRC-20)</option>
+                <option value="BTC">BTC</option>
               </select>
               <button type="submit">Request Deposit</button>
             </form>
             <form id="withdrawForm" class="action-form">
-              <input type="number" id="withdrawAmount" min="10" step="10" placeholder="Withdraw amount" required />
-              <input type="text" id="withdrawAddress" placeholder="TON / USDT address" required />
+              <input type="number" id="withdrawAmount" min="10" step="1" placeholder="Withdraw amount ($)" required />
+              <input type="text" id="withdrawAddress" placeholder="Your wallet address" required />
               <button type="submit">Request Withdraw</button>
             </form>
           </div>
         </div>
 
+        <div id="depositAddressesBlock"></div>
+
         <div class="info-card">
-          <h3>Pending requests</h3>
+          <h3 style="font-family:Rajdhani,sans-serif;margin-bottom:10px;">⏱ Payment Requests</h3>
+          <p class="hint" style="margin-bottom:10px;">Deposits are processed manually in 5–15 minutes.</p>
           <div id="walletRequests"></div>
         </div>
       </section>
 
+      <!-- PROFILE SCREEN -->
       <section class="screen" id="profileScreen">
         <div id="authPanel" class="profile-card"></div>
         <div id="profilePanel" class="profile-card"></div>
         <div id="settingsPanel" class="profile-card"></div>
       </section>
+
     </main>
 
+    <!-- BOTTOM NAV -->
     <nav class="bottom-nav">
-      <button class="nav-btn active" data-screen="home">Home</button>
-      <button class="nav-btn" data-screen="casino">Casino</button>
-      <button class="nav-btn" data-screen="wallet">Wallet</button>
-      <button class="nav-btn" data-screen="profile">Profile</button>
+      <button class="nav-btn active" data-screen="home">🏠 Home</button>
+      <button class="nav-btn" data-screen="casino">🎰 Casino</button>
+      <button class="nav-btn" data-screen="wallet">💰 Wallet</button>
+      <button class="nav-btn" data-screen="profile">👤 Profile</button>
     </nav>
+
   </div>
 
+  <!-- GAME MODAL -->
   <div class="modal" id="gameModal" hidden></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7/dist/umd/supabase.js"></script>
