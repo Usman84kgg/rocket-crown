@@ -1,107 +1,120 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rocket Crown</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rocket Crown</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand-block">
+        <div class="brand-title">ROCKET</div>
+        <div class="brand-subtitle">CROWN</div>
+      </div>
+      <div class="top-actions">
+        <div class="balance-pill">$0.00</div>
+        <button class="menu-button" id="menuButton" aria-label="Открыть меню">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
 
-<!-- LOADING SCREEN -->
-<div id="loading-screen">
-  <div class="loading-logo">👑</div>
-  <div class="loading-title">ROCKET CROWN</div>
-  <div class="loading-subtitle">Premium Crypto Casino</div>
-</div>
-
-<!-- MAIN APP -->
-<div class="container" id="main-app">
-
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <div class="logo">
-      <div class="brand-title">ROCKET</div>
-      <div class="brand-subtitle">CROWN</div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="#">Support 24/7</a>
+      <a href="#">Change Language</a>
+      <a href="mailto:support@rocketcrown.com">Email</a>
+      <a href="#">Referral Program</a>
     </div>
-    <button class="menu-button" id="menuButton" aria-label="Открыть меню">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+
+    <main class="content">
+      <section class="screen active" id="homeScreen">
+        <div class="hero-card">
+          <p class="eyebrow">WELCOME BONUS</p>
+          <h1>200% + 250 FREE SPINS</h1>
+          <button>Claim Bonus</button>
+        </div>
+
+        <div class="section-title-row">
+          <h2>Popular Games</h2>
+          <span>Swipe</span>
+        </div>
+
+        <div class="games-carousel">
+          <div class="game-card"><div class="icon">💣</div><p>Mines</p></div>
+          <div class="game-card"><div class="icon">🚀</div><p>Crash</p></div>
+          <div class="game-card"><div class="icon">🃏</div><p>Blackjack</p></div>
+          <div class="game-card"><div class="icon">🎡</div><p>Roulette</p></div>
+          <div class="game-card"><div class="icon">🪙</div><p>Coinflip</p></div>
+          <div class="game-card"><div class="icon">🎯</div><p>Plinko</p></div>
+        </div>
+
+        <div class="info-card">
+          <h3>Live Wins</h3>
+          <p>@Player + $257</p>
+          <p>@Rocket + $1189</p>
+        </div>
+      </section>
+
+      <section class="screen" id="casinoScreen">
+        <div class="section-title-row">
+          <h2>Casino</h2>
+          <span>Hot games</span>
+        </div>
+
+        <div class="casino-stack">
+          <div class="casino-row">
+            <div class="casino-card">Mines</div>
+            <div class="casino-card">Crash</div>
+          </div>
+          <div class="casino-row">
+            <div class="casino-card">Roulette</div>
+            <div class="casino-card">Blackjack</div>
+          </div>
+          <div class="casino-row">
+            <div class="casino-card">Plinko</div>
+            <div class="casino-card">Coinflip</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="walletScreen">
+        <div class="wallet-card">
+          <p class="eyebrow">Wallet</p>
+          <h1>$12,450.00</h1>
+          <div class="wallet-actions">
+            <button>Deposit</button>
+            <button>Withdraw</button>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h3>Recent Activity</h3>
+          <p>Deposit • Completed</p>
+          <p>Withdrawal • In progress</p>
+          <p>Bonus • Activated</p>
+        </div>
+      </section>
+
+      <section class="screen" id="profileScreen">
+        <div class="profile-card">
+          <div class="avatar">👑</div>
+          <h2>Player Profile</h2>
+          <p>Level 1 • VIP Bronze</p>
+          <p>Verified • Fast payouts</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-screen="home">Home</button>
+      <button class="nav-btn" data-screen="casino">Casino</button>
+      <button class="nav-btn" data-screen="wallet">Wallet</button>
+      <button class="nav-btn" data-screen="profile">Profile</button>
+    </nav>
   </div>
 
-  <div class="top-status">
-    <div class="status-item balance">$0.00</div>
-    <div class="status-item level">LVL 1</div>
-  </div>
-
-  <div class="top-menu" id="topMenu">
-    <a href="#">Настройки</a>
-    <a href="#">Поддержка</a>
-    <a href="#">Контакты</a>
-    <a href="#">Помощь</a>
-  </div>
-
-  <!-- WELCOME BONUS -->
-  <div class="welcome-card">
-    <h2>WELCOME BONUS</h2>
-    <h1>200%</h1>
-    <p>+250 FREE SPINS</p>
-  </div>
-
-  <!-- JACKPOT -->
-  <div class="jackpot-card">
-    <h2>ROCKET JACKPOT</h2>
-    <h1>$17,350</h1>
-    <p>The next winner could be YOU.</p>
-  </div>
-
-  <!-- POPULAR GAMES -->
-  <h2 class="section-title">POPULAR GAMES</h2>
-  <div class="games-carousel">
-    <div class="game-card"><div class="icon">💣</div><p>MINES</p></div>
-    <div class="game-card"><div class="icon">🚀</div><p>CRASH</p></div>
-    <div class="game-card"><div class="icon">🃏</div><p>BLACKJACK</p></div>
-    <div class="game-card"><div class="icon">🎡</div><p>ROULETTE</p></div>
-    <div class="game-card"><div class="icon">🪙</div><p>COINFLIP</p></div>
-    <div class="game-card"><div class="icon">🎯</div><p>PLINKO</p></div>
-  </div>
-
-  <!-- LIVE WINS -->
-  <div class="live-card">
-    <h2>LIVE WINS</h2>
-    <p>@Player + $257</p>
-    <p>@Rocket + $1189</p>
-    <p>@King + $415</p>
-  </div>
-
-  <!-- VIP CLUB -->
-  <div class="vip-card">
-    <h2>VIP CLUB</h2>
-    <p>LEVEL 1</p>
-    <p>Cashback 5%</p>
-    <p>Weekly Bonus</p>
-    <p>Personal Manager</p>
-  </div>
-
-  <!-- PROMO -->
-  <div class="promo-card">
-    <h2>PROMO CODE</h2>
-    <input type="text" placeholder="ENTER CODE">
-    <button>ACTIVATE</button>
-  </div>
-
-  <!-- BOTTOM MENU -->
-  <div class="bottom-menu">
-    <a href="./index.html">🏠<br>Home</a>
-    <a href="./games/index.html">🎰<br>Casino</a>
-    <a href="./wallet/index.html">💰<br>Wallet</a>
-    <a href="./profile/index.html">👤<br>Profile</a>
-  </div>
-
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
