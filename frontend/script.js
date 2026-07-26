@@ -30,45 +30,21 @@ balanceElement.innerHTML = balance.toFixed(2) + " TON";
 
 // ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
 
+const PAGES = ["home","casino","wallet","profile"];
+
 function showPage(page){
 
+PAGES.forEach(name => {
 
-document.getElementById("home-page").style.display="none";
+const element = document.getElementById(name + "-page");
 
-document.getElementById("casino-page").style.display="none";
+if(element){
 
-document.getElementById("wallet-page").style.display="none";
-
-document.getElementById("profile-page").style.display="none";
-
-
-if(page==="home"){
-
-document.getElementById("home-page").style.display="block";
+element.style.display = name === page ? "block" : "none";
 
 }
 
-
-if(page==="casino"){
-
-document.getElementById("casino-page").style.display="block";
-
-}
-
-
-if(page==="wallet"){
-
-document.getElementById("wallet-page").style.display="block";
-
-}
-
-
-if(page==="profile"){
-
-document.getElementById("profile-page").style.display="block";
-
-}
-
+});
 
 }
 
