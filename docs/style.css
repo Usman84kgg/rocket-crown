@@ -1,229 +1,89 @@
 body{
+
 margin:0;
 padding:0;
-overflow-x:hidden;
-min-height:100vh;
+
 font-family:sans-serif;
-color:white;
+
 background:#050816;
+color:white;
+
+overflow-x:hidden;
+
 }
 
 
-/* ОБЩЕЕ */
+/* ОБЩИЙ КОНТЕЙНЕР */
 
-*{
-box-sizing:border-box;
-}
+.casino-container{
 
-
-.container{
-max-width:600px;
-margin:auto;
 padding:20px;
-padding-top:90px;
 padding-bottom:120px;
-}
-
-
-/* TOP BAR */
-
-.top-bar{
-
-position:fixed;
-top:0;
-left:0;
-
-width:100%;
-height:70px;
-
-background:#0D1224;
-
-display:flex;
-justify-content:space-around;
-align-items:center;
-
-border-bottom:1px solid rgba(255,215,0,.15);
-
-z-index:999;
-
-backdrop-filter:blur(15px);
 
 }
 
 
-.top-logo{
+/* HEADER */
 
-color:#FFD700;
-font-weight:bold;
+.casino-header{
 
-}
-
-
-.top-balance{
-
-font-weight:bold;
-font-size:18px;
-
-}
-
-
-.top-level{
-
-color:#FFD700;
-
-}
-
-
-/* КНОПКИ */
-
-.wallet-buttons{
-
-display:flex;
-gap:15px;
-justify-content:center;
-margin-top:15px;
+text-align:center;
 margin-bottom:25px;
 
 }
 
+.casino-header h1{
 
-button{
-
-width:140px;
-padding:15px;
-
-background:#FFD700;
-color:black;
-
-border:none;
-border-radius:15px;
-
-font-weight:bold;
-cursor:pointer;
-
-transition:.3s;
+color:#FFD700;
+margin-bottom:10px;
 
 }
 
+.casino-header p{
 
-button:hover{
-
-transform:scale(1.03);
-
-}
-
-
-/* BONUS */
-
-.bonus-slider{
-
-display:flex;
-overflow-x:auto;
-gap:15px;
-padding-bottom:10px;
-
-}
-
-
-.bonus-card{
-
-min-width:170px;
-
-padding:20px;
-
-border-radius:20px;
-
-background:#101827;
-
-border:1px solid rgba(255,215,0,.20);
-
-text-align:center;
-
-}
-
-
-/* JACKPOT */
-
-.jackpot{
-
-margin-top:25px;
-
-padding:25px;
-
-border-radius:25px;
-
-background:#101827;
-
-border:1px solid rgba(255,215,0,.20);
-
-text-align:center;
-
-box-shadow:0 0 20px rgba(0,0,0,.3);
+color:#8A8F9D;
 
 }
 
 
 /* SEARCH */
 
-.search-games{
+.search-box{
 
-margin-top:25px;
+margin-bottom:25px;
 
 }
 
-
-.search-games input{
+.search-box input{
 
 width:100%;
 
-padding:15px;
+padding:18px;
 
 border:none;
 outline:none;
 
-border-radius:15px;
+border-radius:20px;
 
 background:#101827;
-
 color:white;
 
-}
-
-
-/* GAME CATEGORIES */
-
-.games-categories{
-
-display:flex;
-
-overflow-x:auto;
-
-gap:10px;
-
-margin-top:15px;
-margin-bottom:30px;
+font-size:16px;
 
 }
 
 
-.games-categories div{
+/* ЗАГОЛОВКИ */
 
-min-width:90px;
+h2{
 
-padding:12px;
-
-background:#101827;
-
-border-radius:15px;
-
-text-align:center;
-
-border:1px solid rgba(255,255,255,.05);
+margin-top:30px;
+margin-bottom:15px;
 
 }
 
 
-/* HOT GAMES */
+/* СЛАЙДЕР ИГР */
 
 .games-slider{
 
@@ -233,14 +93,16 @@ overflow-x:auto;
 
 gap:15px;
 
-padding-bottom:15px;
+padding-bottom:10px;
 
 }
 
 
+/* КАРТОЧКА ИГРЫ */
+
 .game-card{
 
-min-width:150px;
+min-width:170px;
 
 padding:30px;
 
@@ -250,9 +112,13 @@ border-radius:25px;
 
 text-align:center;
 
-transition:.3s;
+font-weight:bold;
 
 border:1px solid rgba(255,255,255,.05);
+
+transition:.2s;
+
+cursor:pointer;
 
 }
 
@@ -264,26 +130,9 @@ transform:scale(1.03);
 }
 
 
-/* LIVE WINS */
+/* ДОП БЛОКИ */
 
-.live-wins{
-
-margin-top:30px;
-
-padding:20px;
-
-background:#101827;
-
-border-radius:25px;
-
-border:1px solid rgba(255,255,255,.05);
-
-}
-
-
-/* ACCOUNT STATS */
-
-.stats-card{
+.casino-card{
 
 margin-top:25px;
 
@@ -294,6 +143,23 @@ background:#101827;
 border-radius:25px;
 
 border:1px solid rgba(255,255,255,.05);
+
+}
+
+
+.casino-card h1{
+
+font-size:42px;
+margin:10px 0;
+
+color:#FFD700;
+
+}
+
+
+.casino-card p{
+
+margin-bottom:10px;
 
 }
 
@@ -318,106 +184,27 @@ align-items:center;
 
 border-top:1px solid rgba(255,255,255,.05);
 
-z-index:999;
-
 backdrop-filter:blur(15px);
+
+z-index:999;
 
 }
 
 
 .bottom-menu a{
 
+text-decoration:none;
 color:white;
 
 font-size:13px;
-
 font-weight:bold;
 
 text-align:center;
 
-text-decoration:none;
-
 }
 
 
-/* LOADING */
-
-#loading-screen{
-
-position:fixed;
-
-top:0;
-left:0;
-
-width:100%;
-height:100vh;
-
-background:#050816;
-
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-
-z-index:9999;
-
-}
-
-
-.loading-logo{
-
-font-size:90px;
-
-animation:glow 2s infinite;
-
-}
-
-
-.loading-title{
-
-font-size:40px;
-
-color:#FFD700;
-
-font-weight:bold;
-
-}
-
-
-.loading-subtitle{
-
-margin-top:10px;
-
-color:#999;
-
-}
-
-
-@keyframes glow{
-
-0%{
-transform:scale(1);
-}
-
-50%{
-transform:scale(1.1);
-}
-
-100%{
-transform:scale(1);
-}
-
-}
-
-
-#main-app{
-
-display:none;
-
-}
-
-
-/* SCROLL */
+/* SCROLLBAR */
 
 ::-webkit-scrollbar{
 
