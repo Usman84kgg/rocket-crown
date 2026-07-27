@@ -49,8 +49,7 @@ button { cursor: pointer; }
   max-width: 480px; margin: 0 auto;
   display: flex; justify-content: space-between; align-items: center;
   padding: 12px 16px;
-  background: rgba(8,5,0,0.92);
-  backdrop-filter: blur(20px);
+  background: rgba(8,5,0,0.97);
   border-bottom: 1px solid var(--panel-border);
   z-index: 20;
 }
@@ -517,8 +516,8 @@ button { cursor: pointer; }
   bottom:10px; width:min(480px, calc(100% - 20px));
   display:grid; grid-template-columns:repeat(4,1fr); gap:6px;
   z-index:30;
-  background:rgba(8,5,0,.92); border:1px solid var(--panel-border);
-  border-radius:20px; padding:6px; backdrop-filter:blur(16px);
+  background:rgba(8,5,0,.97); border:1px solid var(--panel-border);
+  border-radius:20px; padding:6px;
 }
 .nav-btn {
   border:none; border-radius:14px; padding:10px 6px;
