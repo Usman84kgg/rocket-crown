@@ -54,7 +54,7 @@
 
       <a class="menu-item" href="#">
         <span class="menu-icon">📄</span>
-        Terms & Conditions
+        Terms &amp; Conditions
       </a>
 
       <a class="menu-item" href="#">
@@ -81,7 +81,7 @@
         </div>
 
         <div class="quick-stats">
-          <div class="stat-pill" id="statGames">6 Games</div>
+          <div class="stat-pill" id="statGames">5 Games</div>
           <div class="stat-pill" id="statUsers">Sign in to play</div>
           <div class="stat-pill" id="statDeposits">Deposits ✓</div>
         </div>
@@ -97,10 +97,16 @@
         </div>
         <div id="promoList" class="promo-list"></div>
 
-        <div class="section-title-row">
-          <h2>⚡ Live Wins</h2>
+        <!-- LIVE BETS TABLE -->
+        <div class="section-title-row" style="margin-top:18px;">
+          <h2>⚡ Live Bets</h2>
         </div>
-        <ul id="liveWinsList" class="live-wins-list"></ul>
+        <div class="bets-tabs">
+          <button class="bets-tab active" data-bets-tab="recent">Последние</button>
+          <button class="bets-tab" data-bets-tab="topweek">Топ недели</button>
+          <button class="bets-tab" data-bets-tab="topmonth">Топ месяца</button>
+        </div>
+        <div id="liveBetsTable" class="bets-table"></div>
 
       </section>
 
@@ -108,47 +114,52 @@
       <section class="screen" id="casinoScreen">
         <div class="section-title-row">
           <h2>🎰 All Games</h2>
-          <span>Fair & Provably Random</span>
+          <span>Fair &amp; Provably Random</span>
         </div>
         <div id="casinoGrid" class="casino-stack"></div>
       </section>
 
       <!-- WALLET SCREEN -->
       <section class="screen" id="walletScreen">
-        <div class="wallet-card">
-          <p class="eyebrow">Your Balance</p>
-          <h1 id="walletBalance">$0.00</h1>
-          <div class="wallet-actions">
-            <form id="depositForm" class="action-form">
-              <input type="number" id="depositAmount" min="5" step="1" placeholder="Deposit amount ($)" required />
-              <select id="depositMethod">
-                <option value="TON">TON</option>
-                <option value="USDT">USDT (TRC-20)</option>
-                <option value="BTC">BTC</option>
-              </select>
-              <button type="submit">Request Deposit</button>
-            </form>
-            <form id="withdrawForm" class="action-form">
-              <input type="number" id="withdrawAmount" min="10" step="1" placeholder="Withdraw amount ($)" required />
-              <input type="text" id="withdrawAddress" placeholder="Your wallet address" required />
-              <button type="submit">Request Withdraw</button>
-            </form>
+
+        <!-- Balance header -->
+        <div class="wallet-header-card">
+          <p class="eyebrow" style="opacity:.7;font-size:11px;letter-spacing:.2em;">YOUR BALANCE</p>
+          <h1 id="walletBalance" style="font-size:40px;margin:6px 0 14px;">$0.00</h1>
+          <div class="wallet-tab-row">
+            <button class="wallet-tab active" data-wtab="deposit">💳 Deposit</button>
+            <button class="wallet-tab" data-wtab="withdraw">⬆ Withdraw</button>
+            <button class="wallet-tab" data-wtab="history">📋 History</button>
           </div>
         </div>
 
-        <div id="depositAddressesBlock"></div>
+        <!-- Deposit panel -->
+        <div class="wallet-panel" id="wPanelDeposit">
+          <p class="hint" style="margin-bottom:12px;">Select currency to see the deposit address:</p>
+          <div class="crypto-grid" id="cryptoGridDeposit"></div>
+          <div id="depositCurrencyBlock" style="display:none;"></div>
+        </div>
 
-        <div class="info-card">
-          <h3 style="font-family:Rajdhani,sans-serif;margin-bottom:10px;">⏱ Payment Requests</h3>
-          <p class="hint" style="margin-bottom:10px;">Deposits are processed manually in 5–15 minutes.</p>
+        <!-- Withdraw panel -->
+        <div class="wallet-panel" id="wPanelWithdraw" style="display:none;">
+          <p class="hint" style="margin-bottom:12px;">Select currency to withdraw:</p>
+          <div class="crypto-grid" id="cryptoGridWithdraw"></div>
+          <div id="withdrawCurrencyBlock" style="display:none;"></div>
+        </div>
+
+        <!-- History panel -->
+        <div class="wallet-panel" id="wPanelHistory" style="display:none;">
+          <h3 style="font-family:Rajdhani,sans-serif;margin-bottom:12px;">📋 Transaction History</h3>
+          <p class="hint" style="margin-bottom:10px;">Deposits processed in 5–15 minutes.</p>
           <div id="walletRequests"></div>
         </div>
+
       </section>
 
       <!-- PROFILE SCREEN -->
       <section class="screen" id="profileScreen">
-        <div id="authPanel" class="profile-card"></div>
-        <div id="profilePanel" class="profile-card"></div>
+        <div id="authPanel"     class="profile-card"></div>
+        <div id="profilePanel"  class="profile-card"></div>
         <div id="settingsPanel" class="profile-card"></div>
       </section>
 
