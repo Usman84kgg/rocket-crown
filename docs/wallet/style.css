@@ -1,7 +1,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: #080b14;
+  background: #080b14 url('../assets/background.jpg') center center / cover fixed;
   color: white;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100vh;
