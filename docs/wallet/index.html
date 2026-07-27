@@ -1,144 +1,274 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Rocket Wallet</title>
-
+<title>Кошелек — Rocket Crown</title>
 <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
 
+<div class="wallet-overlay">
 <div class="wallet-container">
 
-    <!-- HEADER -->
-
     <div class="wallet-header">
-
+        <button class="close-btn" onclick="history.back()">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M1 1L17 17M17 1L1 17" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            Закрыть
+        </button>
         <h1>Кошелек</h1>
-
-        <div class="wallet-tabs">
-
-            <div class="active-tab">
-                Депозит
-            </div>
-
-            <div>
-                Вывод
-            </div>
-
-            <div>
-                История
-            </div>
-
-        </div>
-
     </div>
 
-
-    <!-- BONUS -->
+    <div class="wallet-tabs">
+        <button class="tab-btn active" data-tab="deposit" onclick="switchTab('deposit')">Пополнение</button>
+        <button class="tab-btn" data-tab="withdraw" onclick="switchTab('withdraw')">Вывод</button>
+        <button class="tab-btn" data-tab="history" onclick="switchTab('history')">История</button>
+    </div>
 
     <div class="wallet-banner">
-
-        Бонус до 425% на пополнение
-        <br>
-        +250 Free Spins
-
+        <div class="banner-text">
+            <span class="banner-label">БОНУС НА ПОПОЛНЕНИЕ</span>
+            <span class="banner-value">200% + 250 Free Spins</span>
+        </div>
+        <button class="banner-btn">Получить</button>
     </div>
-
-
-    <!-- REGION -->
 
     <div class="wallet-region">
-
-        <div>
-            Регион оплаты
+        <span class="region-label">Регион оплаты</span>
+        <div class="region-value">
+            <span class="flag">🇺🇸</span>
+            <span>USD</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 5L7 10L12 5" stroke="#8e94a3" stroke-width="2" stroke-linecap="round"/>
+            </svg>
         </div>
-
-        <div>
-            USD $
-        </div>
-
     </div>
 
+    <div id="tab-deposit" class="tab-content active">
+        <h2 class="section-title">Криптовалюта</h2>
+        <div class="crypto-grid">
 
-    <!-- CRYPTO -->
+            <div class="crypto-card" onclick="selectCrypto(this,'TON')">
+                <div class="crypto-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#0098EA"/><path d="M28 11L11.5 21.5V34.5L28 45L44.5 34.5V21.5L28 11ZM28 16.5L38.5 22.75V29L28 35.25L17.5 29V22.75L28 16.5Z" fill="white"/><path d="M28 16.5L17.5 22.75L28 29L38.5 22.75L28 16.5Z" fill="white" fill-opacity="0.6"/></svg>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">TON</span>
+                    <span class="crypto-network">Toncoin</span>
+                </div>
+                <div class="crypto-bonus">+7%</div>
+            </div>
 
-    <h2>Криптовалюта</h2>
+            <div class="crypto-card" onclick="selectCrypto(this,'USDT_TON')">
+                <div class="crypto-icon usdt-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#26A17B"/><path d="M31.2 24.8V22H37V18H19V22H24.8V24.8C20.2 25.2 16.8 26.4 16.8 27.8C16.8 29.2 20.2 30.4 24.8 30.8V39H31.2V30.8C35.8 30.4 39.2 29.2 39.2 27.8C39.2 26.4 35.8 25.2 31.2 24.8ZM28 29.4C22.8 29.4 18.6 28.4 18.6 27.2C18.6 26 22.8 25 28 25C33.2 25 37.4 26 37.4 27.2C37.4 28.4 33.2 29.4 28 29.4Z" fill="white"/></svg>
+                    <div class="badge" style="background:#0098EA">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 3L3 6.2V9.8L8 13L13 9.8V6.2L8 3Z" fill="white"/></svg>
+                    </div>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">USDT</span>
+                    <span class="crypto-network">Toncoin</span>
+                </div>
+                <div class="crypto-bonus">+7%</div>
+            </div>
 
-    <div class="crypto-grid">
+            <div class="crypto-card" onclick="selectCrypto(this,'USDT_TRC20')">
+                <div class="crypto-icon usdt-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#26A17B"/><path d="M31.2 24.8V22H37V18H19V22H24.8V24.8C20.2 25.2 16.8 26.4 16.8 27.8C16.8 29.2 20.2 30.4 24.8 30.8V39H31.2V30.8C35.8 30.4 39.2 29.2 39.2 27.8C39.2 26.4 35.8 25.2 31.2 24.8ZM28 29.4C22.8 29.4 18.6 28.4 18.6 27.2C18.6 26 22.8 25 28 25C33.2 25 37.4 26 37.4 27.2C37.4 28.4 33.2 29.4 28 29.4Z" fill="white"/></svg>
+                    <div class="badge" style="background:#E50915">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 3L13 8L8 13L3 8L8 3Z" fill="white"/></svg>
+                    </div>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">USDT</span>
+                    <span class="crypto-network">TRC20</span>
+                </div>
+                <div class="crypto-bonus">+5%</div>
+            </div>
 
-        <div class="crypto-card">
-            TON
-            <span>+7%</span>
+            <div class="crypto-card" onclick="selectCrypto(this,'USDT_BEP20')">
+                <div class="crypto-icon usdt-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#26A17B"/><path d="M31.2 24.8V22H37V18H19V22H24.8V24.8C20.2 25.2 16.8 26.4 16.8 27.8C16.8 29.2 20.2 30.4 24.8 30.8V39H31.2V30.8C35.8 30.4 39.2 29.2 39.2 27.8C39.2 26.4 35.8 25.2 31.2 24.8ZM28 29.4C22.8 29.4 18.6 28.4 18.6 27.2C18.6 26 22.8 25 28 25C33.2 25 37.4 26 37.4 27.2C37.4 28.4 33.2 29.4 28 29.4Z" fill="white"/></svg>
+                    <div class="badge" style="background:#F0B90B">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 4L10 6L8 8L6 6L8 4ZM5 7L7 9L5 11L3 9L5 7ZM11 7L13 9L11 11L9 9L11 7ZM8 10L10 12L8 14L6 12L8 10Z" fill="white"/></svg>
+                    </div>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">USDT</span>
+                    <span class="crypto-network">BEP20</span>
+                </div>
+                <div class="crypto-bonus">+5%</div>
+            </div>
+
+            <div class="crypto-card" onclick="selectCrypto(this,'SOL')">
+                <div class="crypto-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="url(#sg)"/><defs><linearGradient id="sg" x1="0" y1="0" x2="56" y2="56"><stop stop-color="#9945FF"/><stop offset="1" stop-color="#14F195"/></linearGradient></defs><path d="M15 34h20l-4 4H15l4-4zM15 24h20l-4 4H15l4-4zM35 14H15l4 4h20l-4-4z" fill="white"/></svg>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">SOL</span>
+                    <span class="crypto-network">Solana</span>
+                </div>
+                <div class="crypto-bonus">+5%</div>
+            </div>
+
+            <div class="crypto-card" onclick="selectCrypto(this,'USDT_SOL')">
+                <div class="crypto-icon usdt-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#26A17B"/><path d="M31.2 24.8V22H37V18H19V22H24.8V24.8C20.2 25.2 16.8 26.4 16.8 27.8C16.8 29.2 20.2 30.4 24.8 30.8V39H31.2V30.8C35.8 30.4 39.2 29.2 39.2 27.8C39.2 26.4 35.8 25.2 31.2 24.8ZM28 29.4C22.8 29.4 18.6 28.4 18.6 27.2C18.6 26 22.8 25 28 25C33.2 25 37.4 26 37.4 27.2C37.4 28.4 33.2 29.4 28 29.4Z" fill="white"/></svg>
+                    <div class="badge" style="background:#9945FF">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M4 11h7l-1.5 1.5H4l1.5-1.5zM4 7.5h7L9.5 9H4l1.5-1.5zM11 4H4l1.5 1.5H11L9.5 4z" fill="white"/></svg>
+                    </div>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">USDT</span>
+                    <span class="crypto-network">Solana</span>
+                </div>
+                <div class="crypto-bonus">+5%</div>
+            </div>
+
+            <div class="crypto-card" onclick="selectCrypto(this,'USDC_BEP20')">
+                <div class="crypto-icon usdt-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#2775CA"/><path d="M28 14C20.3 14 14 20.3 14 28C14 35.7 20.3 42 28 42C35.7 42 42 35.7 42 28C42 20.3 35.7 14 28 14ZM28 30.5C26.1 30.5 24.5 29.1 24.5 27.5C24.5 25.9 26.1 24.5 28 24.5C29.9 24.5 31.5 25.9 31.5 27.5C31.5 29.1 29.9 30.5 28 30.5Z" fill="white"/></svg>
+                    <div class="badge" style="background:#F0B90B">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 4L10 6L8 8L6 6L8 4ZM5 7L7 9L5 11L3 9L5 7ZM11 7L13 9L11 11L9 9L11 7ZM8 10L10 12L8 14L6 12L8 10Z" fill="white"/></svg>
+                    </div>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">USDC</span>
+                    <span class="crypto-network">BEP20</span>
+                </div>
+                <div class="crypto-bonus">+5%</div>
+            </div>
+
+            <div class="crypto-card" onclick="selectCrypto(this,'LTC')">
+                <div class="crypto-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#345D9D"/><path d="M20 39h16v-3H23.5l1.8-6.8-2.8 1-.7-2.5 2.8-1L28 16h5l-3.2 12 2.8-1 .7 2.5-2.8 1L29 36h7" fill="white"/></svg>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">LTC</span>
+                    <span class="crypto-network">Litecoin</span>
+                </div>
+                <div class="crypto-bonus">+5%</div>
+            </div>
+
+            <div class="crypto-card" onclick="selectCrypto(this,'BNB')">
+                <div class="crypto-icon">
+                    <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#F0B90B"/><path d="M28 14L32 18L28 22L24 18L28 14ZM20 22L24 26L20 30L16 26L20 22ZM36 22L40 26L36 30L32 26L36 22ZM28 30L32 34L28 38L24 34L28 30ZM28 26L32 30L28 34L24 30L28 26Z" fill="white"/></svg>
+                </div>
+                <div class="crypto-info">
+                    <span class="crypto-name">BNB</span>
+                    <span class="crypto-network">Binance Chain</span>
+                </div>
+                <div class="crypto-bonus">+5%</div>
+            </div>
+
         </div>
+    </div>
 
-        <div class="crypto-card">
-            USDT (TON)
-            <span>+7%</span>
+    <div id="tab-withdraw" class="tab-content">
+        <div class="balance-block">
+            <span class="balance-label">Доступно для вывода</span>
+            <span class="balance-amount">$0.00</span>
         </div>
-
-        <div class="crypto-card">
-            USDT (TRC20)
-            <span>+5%</span>
+        <h2 class="section-title">Выберите способ вывода</h2>
+        <div class="crypto-grid">
+            <div class="crypto-card" onclick="selectWithdraw(this,'TON')">
+                <div class="crypto-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#0098EA"/><path d="M28 11L11.5 21.5V34.5L28 45L44.5 34.5V21.5L28 11ZM28 16.5L38.5 22.75V29L28 35.25L17.5 29V22.75L28 16.5Z" fill="white"/><path d="M28 16.5L17.5 22.75L28 29L38.5 22.75L28 16.5Z" fill="white" fill-opacity="0.6"/></svg></div>
+                <div class="crypto-info"><span class="crypto-name">TON</span><span class="crypto-network">Toncoin</span></div>
+            </div>
+            <div class="crypto-card" onclick="selectWithdraw(this,'USDT_TRC20')">
+                <div class="crypto-icon usdt-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#26A17B"/><path d="M31.2 24.8V22H37V18H19V22H24.8V24.8C20.2 25.2 16.8 26.4 16.8 27.8C16.8 29.2 20.2 30.4 24.8 30.8V39H31.2V30.8C35.8 30.4 39.2 29.2 39.2 27.8C39.2 26.4 35.8 25.2 31.2 24.8ZM28 29.4C22.8 29.4 18.6 28.4 18.6 27.2C18.6 26 22.8 25 28 25C33.2 25 37.4 26 37.4 27.2C37.4 28.4 33.2 29.4 28 29.4Z" fill="white"/></svg><div class="badge" style="background:#E50915"><svg viewBox="0 0 16 16" fill="none"><path d="M8 3L13 8L8 13L3 8L8 3Z" fill="white"/></svg></div></div>
+                <div class="crypto-info"><span class="crypto-name">USDT</span><span class="crypto-network">TRC20</span></div>
+            </div>
+            <div class="crypto-card" onclick="selectWithdraw(this,'USDT_BEP20')">
+                <div class="crypto-icon usdt-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#26A17B"/><path d="M31.2 24.8V22H37V18H19V22H24.8V24.8C20.2 25.2 16.8 26.4 16.8 27.8C16.8 29.2 20.2 30.4 24.8 30.8V39H31.2V30.8C35.8 30.4 39.2 29.2 39.2 27.8C39.2 26.4 35.8 25.2 31.2 24.8ZM28 29.4C22.8 29.4 18.6 28.4 18.6 27.2C18.6 26 22.8 25 28 25C33.2 25 37.4 26 37.4 27.2C37.4 28.4 33.2 29.4 28 29.4Z" fill="white"/></svg><div class="badge" style="background:#F0B90B"><svg viewBox="0 0 16 16" fill="none"><path d="M8 4L10 6L8 8L6 6L8 4ZM5 7L7 9L5 11L3 9L5 7ZM11 7L13 9L11 11L9 9L11 7ZM8 10L10 12L8 14L6 12L8 10Z" fill="white"/></svg></div></div>
+                <div class="crypto-info"><span class="crypto-name">USDT</span><span class="crypto-network">BEP20</span></div>
+            </div>
+            <div class="crypto-card" onclick="selectWithdraw(this,'SOL')">
+                <div class="crypto-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="url(#sg2)"/><defs><linearGradient id="sg2" x1="0" y1="0" x2="56" y2="56"><stop stop-color="#9945FF"/><stop offset="1" stop-color="#14F195"/></linearGradient></defs><path d="M15 34h20l-4 4H15l4-4zM15 24h20l-4 4H15l4-4zM35 14H15l4 4h20l-4-4z" fill="white"/></svg></div>
+                <div class="crypto-info"><span class="crypto-name">SOL</span><span class="crypto-network">Solana</span></div>
+            </div>
+            <div class="crypto-card" onclick="selectWithdraw(this,'LTC')">
+                <div class="crypto-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#345D9D"/><path d="M20 39h16v-3H23.5l1.8-6.8-2.8 1-.7-2.5 2.8-1L28 16h5l-3.2 12 2.8-1 .7 2.5-2.8 1L29 36h7" fill="white"/></svg></div>
+                <div class="crypto-info"><span class="crypto-name">LTC</span><span class="crypto-network">Litecoin</span></div>
+            </div>
+            <div class="crypto-card" onclick="selectWithdraw(this,'BNB')">
+                <div class="crypto-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#F0B90B"/><path d="M28 14L32 18L28 22L24 18L28 14ZM20 22L24 26L20 30L16 26L20 22ZM36 22L40 26L36 30L32 26L36 22ZM28 30L32 34L28 38L24 34L28 30ZM28 26L32 30L28 34L24 30L28 26Z" fill="white"/></svg></div>
+                <div class="crypto-info"><span class="crypto-name">BNB</span><span class="crypto-network">Binance Chain</span></div>
+            </div>
         </div>
+    </div>
 
-        <div class="crypto-card">
-            USDT (BEP20)
-            <span>+5%</span>
+    <div id="tab-history" class="tab-content">
+        <div class="history-empty">
+            <div class="history-icon">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="20" stroke="#2a3042" stroke-width="2"/>
+                    <path d="M24 14V26L30 30" stroke="#4a5568" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <p class="history-empty-text">История транзакций пуста</p>
+            <p class="history-empty-sub">Ваши пополнения и выводы появятся здесь</p>
         </div>
-
-        <div class="crypto-card">
-            TRX
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            ETH
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            BTC
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            SOL
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            BNB
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            DOGE
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            XRP
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            LTC
-            <span>+5%</span>
-        </div>
-
     </div>
 
 </div>
+</div>
 
+<div id="deposit-modal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-box">
+        <div class="modal-header">
+            <div id="modal-icon" class="modal-crypto-icon"></div>
+            <div>
+                <div id="modal-title" class="modal-title">TON</div>
+                <div id="modal-network" class="modal-network">Toncoin</div>
+            </div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-label">Адрес для пополнения</p>
+            <div class="address-box">
+                <span id="modal-address" class="address-text">Адрес не настроен</span>
+                <button class="copy-btn" onclick="copyAddress()">📋</button>
+            </div>
+            <p class="modal-hint">Отправляйте только <span id="modal-coin-hint"></span> на этот адрес.</p>
+            <div class="min-deposit">
+                <span>Минимальный депозит:</span>
+                <span id="modal-min" class="min-amount">$1.00</span>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div id="withdraw-modal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeWithdrawModal()"></div>
+    <div class="modal-box">
+        <div class="modal-header">
+            <div id="wd-icon" class="modal-crypto-icon"></div>
+            <div>
+                <div id="wd-title" class="modal-title">TON</div>
+                <div id="wd-network" class="modal-network">Toncoin</div>
+            </div>
+            <button class="modal-close" onclick="closeWithdrawModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-label">Адрес для вывода</p>
+            <input type="text" id="wd-address" class="wd-input" placeholder="Введите адрес кошелька">
+            <p class="modal-label" style="margin-top:16px">Сумма (USD)</p>
+            <input type="number" id="wd-amount" class="wd-input" placeholder="0.00" min="10">
+            <div class="min-deposit" style="margin-top:12px">
+                <span>Минимальный вывод:</span>
+                <span class="min-amount">$10.00</span>
+            </div>
+            <button class="withdraw-btn" onclick="submitWithdraw()">Вывести</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
 <script src="script.js"></script>
-
 </body>
 </html>
