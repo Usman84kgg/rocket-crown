@@ -47,8 +47,6 @@ border-bottom:1px solid rgba(255,215,0,.25);
 
 z-index:999;
 
-backdrop-filter:blur(15px);
-
 }
 
 
@@ -366,7 +364,7 @@ border:1px solid gold;
 #wallet-page,
 #profile-page{
 
-padding-top:25px;
+padding-top:80px;
 
 }
 
@@ -392,8 +390,6 @@ align-items:center;
 border-top:1px solid rgba(255,215,0,.3);
 
 z-index:999;
-
-backdrop-filter:blur(15px);
 
 }
 
