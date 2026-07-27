@@ -1,7 +1,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
- background: #080b14 url('../assets/bg.png') repeat-y top center;
+  background: #080b14 url('../assets/bg.png') repeat-y top center / 100% auto;
   color: white;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100vh;
@@ -25,25 +25,28 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #1a2035;
-  border: none;
+  background: rgba(20, 14, 2, 0.7);
+  border: 1px solid rgba(200, 150, 40, 0.25);
   color: white;
   font-size: 14px;
   padding: 10px 16px;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 500;
+  backdrop-filter: blur(6px);
 }
 
 .wallet-header h1 { font-size: 26px; font-weight: 700; }
 
 .wallet-tabs {
   display: flex;
-  background: #111827;
+  background: rgba(20, 14, 2, 0.7);
+  border: 1px solid rgba(200, 150, 40, 0.25);
   border-radius: 14px;
   padding: 5px;
   margin-bottom: 20px;
   gap: 4px;
+  backdrop-filter: blur(6px);
 }
 
 .tab-btn {
@@ -52,7 +55,7 @@ body {
   border-radius: 10px;
   border: none;
   background: transparent;
-  color: #6b7280;
+  color: #9ca3af;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -60,9 +63,10 @@ body {
 }
 
 .tab-btn.active {
-  background: #1e2a42;
+  background: rgba(180, 130, 30, 0.2);
   color: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  border: 1px solid rgba(200, 155, 40, 0.4);
+  box-shadow: 0 2px 8px rgba(180,130,30,0.15);
 }
 
 .wallet-banner {
@@ -103,10 +107,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #111827;
+  background: rgba(20, 14, 2, 0.7);
+  border: 1px solid rgba(200, 150, 40, 0.25);
   padding: 14px 18px;
   border-radius: 14px;
   margin-bottom: 24px;
+  backdrop-filter: blur(6px);
 }
 
 .region-label { font-size: 14px; color: #9ca3af; }
@@ -130,20 +136,22 @@ body {
 }
 
 .crypto-card {
-  background: #111827;
+  background: rgba(15, 10, 2, 0.75);
   border-radius: 16px;
   padding: 16px;
   cursor: pointer;
-  border: 1.5px solid transparent;
+  border: 1px solid rgba(180, 135, 30, 0.2);
   transition: all 0.2s;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  backdrop-filter: blur(4px);
 }
 
 .crypto-card:active, .crypto-card.selected {
-  border-color: #5b4fcf;
-  background: #161f35;
+  border-color: rgba(220, 170, 40, 0.7);
+  background: rgba(30, 20, 3, 0.85);
+  box-shadow: 0 0 12px rgba(200, 150, 30, 0.2);
 }
 
 .crypto-icon {
@@ -153,11 +161,7 @@ body {
   position: relative;
 }
 
-.crypto-icon svg {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-}
+.crypto-icon svg { width: 100%; height: 100%; border-radius: 50%; }
 
 .usdt-icon { position: relative; }
 
@@ -168,7 +172,7 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid #111827;
+  border: 2px solid rgba(15, 10, 2, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -178,8 +182,8 @@ body {
 .badge svg { width: 100%; height: 100%; }
 
 .crypto-info { display: flex; flex-direction: column; gap: 2px; }
-.crypto-name { font-size: 15px; font-weight: 700; }
-.crypto-network { font-size: 12px; color: #6b7280; }
+.crypto-name { font-size: 15px; font-weight: 700; color: #f9fafb; }
+.crypto-network { font-size: 12px; color: #9ca3af; }
 
 .crypto-bonus {
   font-size: 12px;
@@ -195,14 +199,16 @@ body {
 .tab-content.active { display: block; }
 
 .balance-block {
-  background: #111827;
+  background: rgba(20, 14, 2, 0.7);
+  border: 1px solid rgba(200, 150, 40, 0.25);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
   text-align: center;
+  backdrop-filter: blur(6px);
 }
 
-.balance-label { font-size: 13px; color: #6b7280; display: block; margin-bottom: 8px; }
+.balance-label { font-size: 13px; color: #9ca3af; display: block; margin-bottom: 8px; }
 .balance-amount { font-size: 32px; font-weight: 700; }
 
 .history-empty {
@@ -216,7 +222,8 @@ body {
 .history-icon {
   width: 72px;
   height: 72px;
-  background: #111827;
+  background: rgba(20, 14, 2, 0.7);
+  border: 1px solid rgba(200, 150, 40, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -224,7 +231,7 @@ body {
 }
 
 .history-empty-text { font-size: 16px; font-weight: 600; color: #9ca3af; }
-.history-empty-sub { font-size: 13px; color: #4b5563; text-align: center; max-width: 220px; }
+.history-empty-sub { font-size: 13px; color: #6b7280; text-align: center; max-width: 220px; }
 
 .modal {
   position: fixed;
@@ -240,18 +247,22 @@ body {
 .modal-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
 }
 
 .modal-box {
   position: relative;
   z-index: 1;
-  background: #111827;
+  background: rgba(12, 8, 1, 0.95);
+  border: 1px solid rgba(200, 150, 40, 0.25);
+  border-bottom: none;
   border-radius: 24px 24px 0 0;
   padding: 24px 20px 40px;
   width: 100%;
   max-width: 480px;
   animation: slideUp 0.3s ease;
+  backdrop-filter: blur(12px);
 }
 
 @keyframes slideUp {
@@ -268,14 +279,13 @@ body {
 
 .modal-crypto-icon { width: 48px; height: 48px; border-radius: 50%; }
 .modal-crypto-icon svg { width: 100%; height: 100%; border-radius: 50%; }
-
 .modal-title { font-size: 18px; font-weight: 700; }
-.modal-network { font-size: 13px; color: #6b7280; }
+.modal-network { font-size: 13px; color: #9ca3af; }
 
 .modal-close {
   margin-left: auto;
-  background: #1e2a42;
-  border: none;
+  background: rgba(20, 14, 2, 0.8);
+  border: 1px solid rgba(200, 150, 40, 0.2);
   color: white;
   width: 36px;
   height: 36px;
@@ -284,12 +294,13 @@ body {
   cursor: pointer;
 }
 
-.modal-label { font-size: 13px; color: #6b7280; margin-bottom: 10px; }
+.modal-label { font-size: 13px; color: #9ca3af; margin-bottom: 10px; }
 
 .address-box {
   display: flex;
   align-items: center;
-  background: #1a2035;
+  background: rgba(20, 14, 2, 0.8);
+  border: 1px solid rgba(180, 135, 30, 0.2);
   border-radius: 12px;
   padding: 14px 16px;
   gap: 12px;
@@ -306,8 +317,8 @@ body {
 }
 
 .copy-btn {
-  background: #252d42;
-  border: none;
+  background: rgba(180, 135, 30, 0.15);
+  border: 1px solid rgba(180, 135, 30, 0.3);
   font-size: 18px;
   width: 36px;
   height: 36px;
@@ -320,33 +331,45 @@ body {
 .min-deposit {
   display: flex;
   justify-content: space-between;
-  background: #1a2035;
+  background: rgba(20, 14, 2, 0.7);
+  border: 1px solid rgba(180, 135, 30, 0.15);
   padding: 12px 16px;
   border-radius: 10px;
   font-size: 13px;
   color: #9ca3af;
+  margin-bottom: 8px;
 }
 
-.min-amount { color: white; font-weight: 600; }
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+
+.min-amount { color: #f0b429; font-weight: 600; }
 
 .wd-input {
   width: 100%;
-  background: #1a2035;
-  border: 1.5px solid #252d42;
+  background: rgba(20, 14, 2, 0.8);
+  border: 1px solid rgba(180, 135, 30, 0.25);
   border-radius: 12px;
   padding: 14px 16px;
   color: white;
   font-size: 15px;
   outline: none;
   margin-bottom: 12px;
+  transition: border-color 0.2s;
 }
 
-.wd-input:focus { border-color: #5b4fcf; }
-.wd-input::placeholder { color: #4b5563; }
+.wd-input:focus { border-color: rgba(220, 170, 40, 0.6); }
+.wd-input::placeholder { color: #6b7280; }
 
 .withdraw-btn {
   width: 100%;
-  background: linear-gradient(120deg, #4f46e5, #7c3aed);
+  background: linear-gradient(120deg, #b8860b, #d4a017);
   border: none;
   color: white;
   font-size: 16px;
@@ -355,15 +378,18 @@ body {
   border-radius: 14px;
   cursor: pointer;
   margin-top: 8px;
+  box-shadow: 0 4px 20px rgba(180, 130, 20, 0.3);
 }
+
+.withdraw-btn:active { opacity: 0.85; }
 
 .toast {
   position: fixed;
   bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
-  background: #1e2a42;
-  border: 1px solid #2d3e5a;
+  background: rgba(20, 14, 2, 0.95);
+  border: 1px solid rgba(200, 155, 40, 0.3);
   color: white;
   padding: 12px 24px;
   border-radius: 12px;
@@ -371,6 +397,7 @@ body {
   font-weight: 500;
   z-index: 200;
   white-space: nowrap;
+  backdrop-filter: blur(8px);
 }
 
 .toast.hidden { display: none; }
