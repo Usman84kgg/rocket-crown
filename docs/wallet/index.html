@@ -1,144 +1,69 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Rocket Wallet</title>
-
+<title>Кошелек — Rocket Crown</title>
 <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
 
 <div class="wallet-container">
 
-    <!-- HEADER -->
-
-    <div class="wallet-header">
-
-        <h1>Кошелек</h1>
-
-        <div class="wallet-tabs">
-
-            <div class="active-tab">
-                Депозит
-            </div>
-
-            <div>
-                Вывод
-            </div>
-
-            <div>
-                История
-            </div>
-
-        </div>
-
+  <!-- HEADER -->
+  <div class="wallet-header">
+    <h1>Кошелек</h1>
+    <div class="wallet-tabs">
+      <div class="active-tab" id="tabDeposit" onclick="switchTab('deposit')">Депозит</div>
+      <div id="tabWithdraw" onclick="switchTab('withdraw')">Вывод</div>
+      <div id="tabHistory" onclick="switchTab('history')">История</div>
     </div>
+  </div>
 
+  <!-- BALANCE -->
+  <div id="balanceBlock" style="background:#151a25;border-radius:20px;padding:20px;margin-bottom:20px;display:none;">
+    <div style="font-size:14px;color:#8e94a3;margin-bottom:6px;">ВАШ БАЛАНС</div>
+    <div id="balanceAmount" style="font-size:36px;font-weight:bold;">$0.00</div>
+  </div>
 
-    <!-- BONUS -->
+  <!-- BONUS -->
+  <div class="wallet-banner">
+    Бонус до 425% на пополнение<br>+250 Free Spins
+  </div>
 
-    <div class="wallet-banner">
+  <!-- REGION -->
+  <div class="wallet-region">
+    <div>Регион оплаты</div>
+    <div>USD $</div>
+  </div>
 
-        Бонус до 425% на пополнение
-        <br>
-        +250 Free Spins
-
-    </div>
-
-
-    <!-- REGION -->
-
-    <div class="wallet-region">
-
-        <div>
-            Регион оплаты
-        </div>
-
-        <div>
-            USD $
-        </div>
-
-    </div>
-
-
-    <!-- CRYPTO -->
-
+  <!-- DEPOSIT TAB -->
+  <div id="panelDeposit">
     <h2>Криптовалюта</h2>
+    <div class="crypto-grid" id="depositGrid"></div>
+    <div id="depositDetail" style="display:none;margin-top:20px;background:#151a25;border-radius:20px;padding:20px;"></div>
+  </div>
 
-    <div class="crypto-grid">
+  <!-- WITHDRAW TAB -->
+  <div id="panelWithdraw" style="display:none;">
+    <h2>Вывод средств</h2>
+    <div class="crypto-grid" id="withdrawGrid"></div>
+    <div id="withdrawDetail" style="display:none;margin-top:20px;background:#151a25;border-radius:20px;padding:20px;"></div>
+  </div>
 
-        <div class="crypto-card">
-            TON
-            <span>+7%</span>
-        </div>
+  <!-- HISTORY TAB -->
+  <div id="panelHistory" style="display:none;">
+    <h2>История</h2>
+    <div id="historyList"></div>
+  </div>
 
-        <div class="crypto-card">
-            USDT (TON)
-            <span>+7%</span>
-        </div>
-
-        <div class="crypto-card">
-            USDT (TRC20)
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            USDT (BEP20)
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            TRX
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            ETH
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            BTC
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            SOL
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            BNB
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            DOGE
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            XRP
-            <span>+5%</span>
-        </div>
-
-        <div class="crypto-card">
-            LTC
-            <span>+5%</span>
-        </div>
-
-    </div>
+  <!-- TOAST -->
+  <div id="toast" style="display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#23293a;color:white;padding:14px 24px;border-radius:16px;font-size:16px;z-index:999;max-width:90%;text-align:center;"></div>
 
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7/dist/umd/supabase.js"></script>
+<script src="../supabase-client.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
